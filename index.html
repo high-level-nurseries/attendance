@@ -519,7 +519,7 @@ function tabOverview(el) {
       '<div class="stat' + (s.pendingDevices && canEdit() ? ' click' : '') + '" id="st-pend"><i class="fa-solid fa-mobile-screen" style="color:var(--amber)"></i><b>' + s.pendingDevices + '</b><span>أجهزة بانتظار الموافقة</span></div>' +
       '<div class="stat"><i class="fa-solid fa-building" style="color:var(--blue-d)"></i><b>' + s.branches + '</b><span>الفروع</span></div></div>' +
       (s.pendingDevices && canEdit() ? '<div class="hint-box" style="margin-bottom:16px"><i class="fa-solid fa-bell"></i> في ' + s.pendingDevices + ' جهاز بانتظار موافقتك. <a href="#" id="go-dev">افتحي الأجهزة</a></div>' : '') +
-      '<div class="card"><h3>لم يبصموا دخول اليوم (' + s.absentNames.length + ')</h3>' + (s.absentNames.length ? '<div class="chip-list">' + s.absentNames.map(function (n) { return '<span class="chip">' + esc(n) + '</span>'; }).join('') + '</div>' : '<div class="ok-box">الكل بصم اليوم ✅</div>') + '</div>';
+      '<div class="card"><h3>لم يبصموا دخول اليوم (' + s.absentNames.length + ')</h3>' + (s.absentNames.length ? '<div class="chip-list">' + s.absentNames.map(function (n) { return '<span class="chip">' + esc(n) + '</span>'; }).join('') + '</div>' : (s.employees ? '<div class="ok-box">الكل بصم اليوم ✅</div>' : '<div class="tiny">لا توجد حسابات موظفات بعد</div>')) + '</div>';
     var go = function (e) { if (e) e.preventDefault(); S.tab = 'devices'; renderAdmin(); };
     if ($('go-dev')) $('go-dev').onclick = go;
     if (s.pendingDevices && canEdit()) $('st-pend').onclick = go;
