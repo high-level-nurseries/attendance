@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EC4899">
+<meta name="robots" content="noindex, nofollow">
+<title>حضانات هاي ليفيل — الحضور والانصراف</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--pink:#EC4899;--pink-d:#DB2777;--blue:#38BDF8;--blue-d:#0EA5E9;--amber:#F59E0B;--green:#10B981;--red:#EF4444;--ink:#1F2937;--muted:#6B7280;--line:#E5E7EB;--bg:#FDF2F8;--card:#FFFFFF;--radius:18px;--shadow:0 6px 24px rgba(236,72,153,.10)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:"Tajawal","Segoe UI",Tahoma,system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.7}
+.boot{text-align:center;padding:90px 20px;color:var(--pink)}
+.boot img{width:120px;height:120px;border-radius:50%}
+.wrap{max-width:1080px;margin:0 auto;padding:18px}
+.center-wrap{max-width:460px;margin:0 auto;padding:24px 18px 60px}
+.landing{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 20% 20%,rgba(236,72,153,.16),transparent 45%),radial-gradient(circle at 82% 78%,rgba(56,189,248,.18),transparent 45%),var(--bg);padding:30px 18px}
+.logo{border-radius:50%;object-fit:cover;background:#fff}
+.landing .logo{width:168px;height:168px;filter:drop-shadow(0 8px 22px rgba(236,72,153,.25))}
+.landing h1{font-size:28px;margin:14px 0 2px;color:var(--pink-d)}
+.landing .sub{color:var(--muted);margin-bottom:18px;font-size:15px}
+.landing .badges{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:22px}
+.badge-soft{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13px;color:var(--muted)}
+.badge-soft i{color:var(--blue-d);margin-inline-end:6px}
+.login-card{width:100%;max-width:380px}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:16px;border:1px solid rgba(236,72,153,.06)}
+.card h2{margin:0 0 4px;font-size:19px}
+.card h3{margin:0 0 12px;font-size:16px}
+.muted{color:var(--muted);font-size:14px}.tiny{font-size:12.5px;color:var(--muted)}
+label{display:block;font-size:14px;margin:12px 0 5px;font-weight:700}
+input,select,textarea{width:100%;padding:12px 14px;font-size:15px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-family:inherit;color:var(--ink);outline:none;transition:.15s}
+input:focus,select:focus,textarea:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(236,72,153,.12)}
+input[type=number],input[type=tel].ltr,input.ltr{direction:ltr;text-align:left}
+input[type=checkbox]{width:auto}
+.pin-input{text-align:center;letter-spacing:14px;font-size:30px;font-weight:800;padding:14px;direction:ltr}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:12px;border:none;cursor:pointer;font-size:15px;font-weight:700;font-family:inherit;transition:.15s;background:var(--pink);color:#fff;width:100%;text-decoration:none}
+.btn:hover{background:var(--pink-d)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.blue{background:var(--blue-d)}.btn.blue:hover{background:#0284C7}
+.btn.green{background:var(--green)}.btn.green:hover{background:#059669}
+.btn.red,.btn.danger{background:var(--red)}.btn.red:hover,.btn.danger:hover{background:#DC2626}
+.btn.amber{background:var(--amber)}
+.btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}.btn.ghost:hover{background:#F9FAFB;border-color:var(--pink)}
+.btn.sm{padding:7px 11px;font-size:13px;width:auto;border-radius:10px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+td .btn-row{flex-wrap:nowrap}.btn-row .btn{width:auto}
+.topbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:900}
+.topbar-in{max-width:1080px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:12px}
+.topbar img{width:44px;height:44px}
+.topbar .tt{flex:1;min-width:0}
+.topbar .tt b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .tt span{font-size:12.5px;color:var(--muted)}
+.role-chip{font-size:12px;padding:3px 10px;border-radius:999px;background:rgba(236,72,153,.12);color:var(--pink-d);font-weight:700;white-space:nowrap}
+.role-chip.supervisor{background:rgba(56,189,248,.15);color:#0284C7}
+.role-chip.developer{background:rgba(245,158,11,.15);color:#B45309}
+.role-chip.manager{background:rgba(124,58,237,.12);color:#6D28D9}
+.role-chip.board{background:rgba(16,185,129,.14);color:#047857}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;padding:9px 15px;border-radius:999px;background:#fff;border:1.5px solid var(--line);cursor:pointer;font-size:14px;font-weight:700;color:var(--muted);font-family:inherit;white-space:nowrap}
+.tab.active{background:var(--pink);color:#fff;border-color:var(--pink)}
+.tab .cnt{background:var(--red);color:#fff;border-radius:999px;padding:0 7px;font-size:11px;margin-inline-start:4px}
+.att-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.att-btn{border-radius:var(--radius);padding:26px 14px;text-align:center;cursor:pointer;border:2px solid transparent;color:#fff;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:var(--shadow);transition:.15s}
+.att-btn i{font-size:38px}.att-btn b{font-size:17px}.att-btn small{opacity:.92;font-size:12.5px}
+.att-btn.in{background:linear-gradient(150deg,#10B981,#059669)}
+.att-btn.out{background:linear-gradient(150deg,#F59E0B,#D97706)}
+.att-btn:active{transform:scale(.97)}
+.att-btn:disabled{opacity:.38;filter:grayscale(.5);cursor:not-allowed}
+.status-pill{display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:999px;font-weight:700;font-size:14px}
+.status-pill.in{background:rgba(16,185,129,.14);color:#047857}
+.status-pill.out{background:rgba(107,114,128,.14);color:#4B5563}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff}
+th,td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:#FDF2F8;color:var(--pink-d);font-size:12.5px;font-weight:800;position:sticky;top:0}
+tr:last-child td{border-bottom:none}
+td.ltr{direction:ltr;text-align:left;font-size:12px}
+.pill{padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;display:inline-block}
+.pill.ok{background:rgba(16,185,129,.14);color:#047857}
+.pill.no{background:rgba(239,68,68,.12);color:#B91C1C}
+.pill.wait{background:rgba(245,158,11,.15);color:#B45309}
+.pill.info{background:rgba(56,189,248,.15);color:#0284C7}
+.pill.grey{background:#F3F4F6;color:#6B7280}
+.att-table td{padding:11px 12px}
+.tm{display:inline-block;padding:4px 12px;border-radius:10px;font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;direction:ltr;letter-spacing:.5px}
+.tm.ontime{background:rgba(16,185,129,.16);color:#047857;box-shadow:inset 0 0 0 1.5px rgba(16,185,129,.35)}
+.tm.late{background:rgba(239,68,68,.14);color:#B91C1C;box-shadow:inset 0 0 0 1.5px rgba(239,68,68,.35)}
+.tm.out{background:rgba(245,158,11,.16);color:#B45309;box-shadow:inset 0 0 0 1.5px rgba(245,158,11,.40)}
+.tm.no{background:rgba(107,114,128,.10);color:#9CA3AF;font-size:13px;font-weight:600}
+.sub-note{display:block;font-size:11.5px;font-weight:700;margin-top:3px}
+.sub-note.r{color:#B91C1C}.sub-note.o{color:#B45309}
+.legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;background:#fff;border-radius:14px;padding:10px 16px;box-shadow:var(--shadow);font-size:12.5px;color:var(--muted);margin-bottom:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend .dot{width:12px;height:12px;border-radius:4px;display:inline-block}
+.dot.g{background:rgba(16,185,129,.55)}.dot.r{background:rgba(239,68,68,.55)}.dot.o{background:rgba(245,158,11,.6)}.dot.n{background:rgba(107,114,128,.3)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow);text-align:center}
+.stat i{font-size:22px;color:var(--pink)}.stat b{display:block;font-size:26px;margin:4px 0 0}.stat span{font-size:12.5px;color:var(--muted)}
+.stat.click{cursor:pointer}
+.modal-bg{position:fixed;inset:0;background:rgba(17,24,39,.45);z-index:1000;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px)}
+.modal{background:#fff;width:100%;max-width:580px;border-radius:20px 20px 0 0;padding:20px;max-height:92vh;overflow-y:auto;animation:up .2s ease}
+@media(min-width:700px){.modal-bg{align-items:center}.modal{border-radius:20px}}
+@keyframes up{from{transform:translateY(30px);opacity:.4}}
+.modal h3{margin:0 0 10px;font-size:18px}
+.modal-close{float:left;background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted)}
+#map{height:320px;border-radius:14px;margin-top:10px;z-index:1}
+#toast-wrap{position:fixed;bottom:20px;left:0;right:0;z-index:2000;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.toast{background:#1F2937;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;max-width:90%;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:tin .2s ease;display:flex;align-items:center;gap:8px}
+.toast.ok{background:#059669}.toast.err{background:#DC2626}.toast.warn{background:#D97706}
+@keyframes tin{from{transform:translateY(12px);opacity:0}}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.flex-between{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.divider{height:1px;background:var(--line);margin:16px 0}
+.empty{text-align:center;color:var(--muted);padding:30px 10px}
+.empty i{font-size:34px;color:#E5E7EB;display:block;margin-bottom:10px}
+.loading{text-align:center;padding:30px;color:var(--muted)}
+.chip-list{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:#F3F4F6;border-radius:999px;padding:4px 12px;font-size:12.5px}
+.chip .x{cursor:pointer;color:var(--red);margin-inline-start:6px}
+.checklist label{display:flex;align-items:center;gap:8px;font-weight:500;padding:7px 0;border-bottom:1px solid var(--line);margin:0}
+.hint-box{background:#FFF7ED;border:1px solid #FED7AA;color:#9A3412;border-radius:12px;padding:12px;font-size:14px}
+.ok-box{background:#ECFDF5;border:1px solid #A7F3D0;color:#065F46;border-radius:12px;padding:12px;font-size:14px}
+.err-box{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;border-radius:12px;padding:12px;font-size:14px}
+.info-box{background:#F0F9FF;border:1px solid #BAE6FD;color:#075985;border-radius:12px;padding:12px;font-size:14px}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end}
+.filters label{margin-top:0}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.loc{display:flex;gap:10px;align-items:flex-start}
+.loc i{font-size:22px;margin-top:3px}
+.branch-card{border:1.5px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.foot{text-align:center;color:var(--muted);font-size:12px;padding:20px 0 30px}
+@media(max-width:560px){.att-btn{padding:20px 8px}.att-btn i{font-size:30px}.landing .logo{width:140px;height:140px}.grid2{grid-template-columns:1fr}.grid4{grid-template-columns:1fr 1fr}.wrap{padding:12px}.topbar-in{padding:8px 12px}}
+</style>
+</head>
+<body>
+<div id="app"><div class="boot"><i class="fa-solid fa-circle-notch fa-spin fa-2x"></i></div></div>
+<div id="toast-wrap"></div>
+<script>
+'use strict';
+/* =================== الإعداد =================== */
+var API_URL = 'https://script.google.com/macros/s/AKfycbzXx5K-YOGN4JVeJKLlJk6w2FDax5CMmdPhFy5Ugk5ZrYWV1xwWlJ9p15iMwVloUl-7-A/exec';
+var LS = { token: 'hl_att_token', device: 'hl_att_device', logo: 'hl_att_logo_v1', org: 'hl_att_org' };
+var S = { token: null, me: null, cfg: null, admin: null, tab: null, branch: '', logo: '' };
+var ROLE_AR = { employee: 'موظفة', supervisor: 'مشرفة', board: 'عضو مجلس الإدارة', manager: 'المدير التنفيذي', developer: 'المطوّر' };
+
+/* =================== أدوات =================== */
+function $(id) { return document.getElementById(id); }
+function esc(s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+function toArabicSafeDigits(s) {
+  return String(s || '').replace(/[٠-٩]/g, function (c) { return String(c.charCodeAt(0) - 0x0660); })
+    .replace(/[۰-۹]/g, function (c) { return String(c.charCodeAt(0) - 0x06F0); });
+}
+function toast(msg, kind) {
+  var t = document.createElement('div');
+  t.className = 'toast ' + (kind || '');
+  var ic = kind === 'ok' ? 'fa-circle-check' : kind === 'err' ? 'fa-circle-exclamation' : kind === 'warn' ? 'fa-triangle-exclamation' : 'fa-circle-info';
+  t.innerHTML = '<i class="fa-solid ' + ic + '"></i><span>' + esc(msg) + '</span>';
+  $('toast-wrap').appendChild(t);
+  setTimeout(function () { t.style.opacity = '0'; t.style.transition = '.3s'; }, 4200);
+  setTimeout(function () { t.remove(); }, 4600);
+}
+function getDeviceId() {
+  var d = lsGet(LS.device);
+  if (!d || !/^[A-Za-z0-9_-]{16,64}$/.test(d)) {
+    var a = new Uint8Array(18);
+    (window.crypto || window.msCrypto).getRandomValues(a);
+    d = Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+    lsSet(LS.device, d);
+  }
+  return d;
+}
+/** ASCII فقط في الطلب حتى لا يتغير ترميز العربي. */
+function asciiJson(v) { return JSON.stringify(v).replace(/[\u007f-￿]/g, function (c) { return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4); }); }
+function api(action, args) {
+  var body = asciiJson({ action: action, token: S.token || '', args: args || {} });
+  var ctrl = window.AbortController ? new AbortController() : null;
+  var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 45000) : null;
+  return fetch(API_URL, { method: 'POST', body: body, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, redirect: 'follow', credentials: 'omit', cache: 'no-store', signal: ctrl ? ctrl.signal : undefined })
+    .then(function (r) { if (!r.ok) throw new Error('net'); return r.text(); })
+    .then(function (txt) {
+      if (timer) clearTimeout(timer);
+      var res; try { res = JSON.parse(txt); } catch (e) { throw new Error('تعذّر الاتصال بالنظام، حاولي مرة ثانية'); }
+      if (!res.ok) {
+        if (res.code === 'auth') { logoutLocal(); renderLanding(res.error); }
+        var err = new Error(res.error || 'خطأ'); err.code = res.code; throw err;
+      }
+      return res.data;
+    }, function (e) {
+      if (timer) clearTimeout(timer);
+      if (e && e.code) throw e;
+      throw new Error(navigator.onLine === false ? 'لا يوجد اتصال بالإنترنت' : 'تعذّر الاتصال بالنظام، حاولي مرة ثانية');
+    });
+}
+function busy(btn, on, label) {
+  if (!btn) return;
+  if (on) { btn.dataset.html = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="spin"></span> ' + (label || 'لحظة…'); }
+  else { btn.disabled = false; if (btn.dataset.html) btn.innerHTML = btn.dataset.html; }
+}
+function getPosition() {
+  return new Promise(function (resolve, reject) {
+    if (!navigator.geolocation) return reject(new Error('المتصفح لا يدعم تحديد الموقع'));
+    navigator.geolocation.getCurrentPosition(function (p) { resolve(p.coords); }, function (err) {
+      var m = { 1: 'لازم تسمحين للصفحة باستخدام الموقع (من إعدادات المتصفح ← الموقع ← سماح)', 2: 'تعذّر تحديد موقعك. تأكدي إن خدمة الموقع (GPS) شغالة', 3: 'تأخر تحديد الموقع، حاولي مرة ثانية' };
+      reject(new Error(m[err.code] || 'تعذّر تحديد الموقع'));
+    }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 });
+  });
+}
+function logoHtml(cls, size) { return '<img class="logo ' + (cls || '') + '" src="' + esc(S.logo || '') + '" alt="الشعار" width="' + size + '" height="' + size + '">'; }
+function loadLogo() {
+  S.logo = lsGet(LS.logo) || '';
+  if (S.logo) return Promise.resolve();
+  return api('logo').then(function (d) { if (d && /^data:image\//.test(d)) { S.logo = d; lsSet(LS.logo, d); document.querySelectorAll('img.logo').forEach(function (i) { i.src = d; }); } }).catch(function () {});
+}
+function closeModal() { var m = $('modal-bg'); if (m) m.remove(); }
+function openModal(title, html, opts) {
+  closeModal();
+  var bg = document.createElement('div');
+  bg.className = 'modal-bg'; bg.id = 'modal-bg';
+  bg.innerHTML = '<div class="modal" role="dialog"><button class="modal-close" aria-label="إغلاق">&times;</button><h3>' + esc(title) + '</h3><div id="modal-body">' + html + '</div></div>';
+  bg.querySelector('.modal-close').onclick = closeModal;
+  bg.addEventListener('click', function (e) { if (e.target === bg && !(opts && opts.sticky)) closeModal(); });
+  document.body.appendChild(bg);
+  return bg;
+}
+function confirmBox(text, opts) {
+  opts = opts || {};
+  return new Promise(function (resolve) {
+    var typed = opts.typed ? '<label>اكتبي «' + esc(opts.typed) + '» للتأكيد</label><input id="cf-typed" autocomplete="off">' : '';
+    openModal(opts.title || 'تأكيد', '<p style="margin-top:0">' + esc(text) + '</p>' + typed +
+      '<div class="btn-row" style="margin-top:14px"><button class="btn ' + (opts.danger ? 'danger' : '') + '" id="cf-yes">' + esc(opts.yes || 'تأكيد') + '</button><button class="btn ghost" id="cf-no">إلغاء</button></div>', { sticky: true });
+    $('cf-no').onclick = function () { closeModal(); resolve(false); };
+    $('cf-yes').onclick = function () {
+      if (opts.typed && $('cf-typed').value.trim() !== opts.typed) { toast('النص غير مطابق', 'err'); return; }
+      closeModal(); resolve(opts.typed ? $('cf-typed').value.trim() : true);
+    };
+  });
+}
+function today() { return (S.cfg && S.cfg.today) || new Date().toISOString().slice(0, 10); }
+function monthStart() { return today().slice(0, 8) + '01'; }
+function fmtDate(d) { return d ? d.split('-').reverse().join('/') : ''; }
+function emptyHtml(icon, text) { return '<div class="empty"><i class="fa-solid ' + icon + '"></i>' + esc(text) + '</div>'; }
+function downloadCsv(res) {
+  try {
+    var blob = new Blob([res.csv], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = res.filename;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+    toast('تم تجهيز الملف (' + res.count + ' سطر)', 'ok');
+  } catch (e) { toast('تعذّر تنزيل الملف', 'err'); }
+}
+
+/* =================== الجلسة =================== */
+function logoutLocal() { S.token = null; S.me = null; S.admin = null; lsDel(LS.token); }
+function doLogout() {
+  var t = S.token;
+  logoutLocal();
+  if (t) { S.token = t; api('logout').catch(function () {}); S.token = null; }
+  renderLanding();
+}
+
+/* =================== الهبوط + الدخول =================== */
+function renderLanding(msg) {
+  closeModal();
+  var org = (S.cfg && S.cfg.org_name) || lsGet(LS.org) || 'حضانات هاي ليفيل';
+  $('app').innerHTML =
+    '<div class="landing">' + logoHtml('', 168) +
+    '<h1>' + esc(org) + '</h1><div class="sub">نظام الحضور والانصراف</div>' +
+    '<div class="card login-card">' +
+    '<label for="pin" style="text-align:center;margin-top:0">ادخلي رقمك السري</label>' +
+    '<input id="pin" class="pin-input" type="password" inputmode="numeric" autocomplete="one-time-code" maxlength="4" placeholder="••••">' +
+    '<div id="login-msg" style="margin-top:12px">' + (msg ? '<div class="hint-box">' + esc(msg) + '</div>' : '') + '</div>' +
+    '<button class="btn" id="login-btn" style="margin-top:12px"><i class="fa-solid fa-right-to-bracket"></i> دخول</button>' +
+    '</div>' +
+    '<div class="badges"><span class="badge-soft"><i class="fa-solid fa-location-dot"></i>التحقق من الموقع</span><span class="badge-soft"><i class="fa-solid fa-mobile-screen"></i>جهاز مربوط</span><span class="badge-soft"><i class="fa-solid fa-lock"></i>رقم سري</span></div>' +
+    '<div class="foot">© ' + esc(org) + '</div></div>';
+  var pin = $('pin');
+  pin.addEventListener('input', function () {
+    var v = toArabicSafeDigits(pin.value).replace(/\D/g, '').slice(0, 4);
+    if (pin.value !== v) pin.value = v;
+    if (v.length === 4) doLogin();
+  });
+  pin.addEventListener('keydown', function (e) { if (e.key === 'Enter') doLogin(); });
+  $('login-btn').onclick = doLogin;
+  setTimeout(function () { pin.focus(); }, 200);
+}
+var loginBusy = false;
+function doLogin() {
+  if (loginBusy) return;
+  var pin = toArabicSafeDigits($('pin').value).replace(/\D/g, '');
+  if (pin.length !== 4) { $('login-msg').innerHTML = '<div class="hint-box">الرقم السري ٤ أرقام</div>'; return; }
+  loginBusy = true;
+  var btn = $('login-btn'); busy(btn, true, 'جارٍ الدخول…');
+  api('login', { pin: pin, deviceId: getDeviceId(), ua: navigator.userAgent }).then(function (d) {
+    loginBusy = false;
+    if (d.pending) {
+      busy(btn, false); $('pin').value = '';
+      $('login-msg').innerHTML = '<div class="info-box"><b>أهلًا ' + esc(d.name) + '</b><br>هذا جهاز جديد، وتم إرسال طلب ربطه للمشرفة. بعد ما توافق، ادخلي من جديد من نفس الجوال.</div>';
+      return;
+    }
+    S.token = d.token; lsSet(LS.token, d.token);
+    S.me = { name: d.name, role: d.role };
+    route();
+  }).catch(function (e) {
+    loginBusy = false; busy(btn, false); $('pin').value = '';
+    $('login-msg').innerHTML = '<div class="err-box">' + esc(e.message) + '</div>';
+    $('pin').focus();
+  });
+}
+
+function route() {
+  if (!S.token) return renderLanding();
+  if (S.me && S.me.role === 'employee') return renderEmployee();
+  if (S.me) return renderAdmin();
+  api('me').then(function (me) { S.me = me; route(); }).catch(function (e) { if (e.code !== 'auth') { $('app').innerHTML = '<div class="center-wrap"><div class="err-box">' + esc(e.message) + '</div><button class="btn" style="margin-top:12px" onclick="location.reload()">إعادة المحاولة</button></div>'; } });
+}
+
+function topbar(sub) {
+  var org = (S.cfg && S.cfg.org_name) || 'حضانات هاي ليفيل';
+  return '<div class="topbar"><div class="topbar-in">' + logoHtml('', 44) +
+    '<div class="tt"><b>' + esc(S.me.name) + '</b><span>' + esc(sub || org) + '</span></div>' +
+    '<span class="role-chip ' + esc(S.me.role) + '">' + esc(ROLE_AR[S.me.role] || '') + (S.me.role === 'developer' ? ' 🔒' : '') + '</span>' +
+    '<button class="btn ghost sm" id="logout-btn" title="خروج"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>' +
+    '</div></div>';
+}
+
+/* =================== واجهة الموظفة =================== */
+function renderEmployee() {
+  $('app').innerHTML = topbar('نظام الحضور والانصراف') + '<div class="wrap" style="max-width:720px"><div id="punch-area"><div class="loading"><i class="fa-solid fa-circle-notch fa-spin"></i></div></div><div id="hist-area"></div><div id="acct-area"></div></div>';
+  $('logout-btn').onclick = doLogout;
+  mountPunch($('punch-area'), true);
+  mountHistory($('hist-area'));
+  mountAccount($('acct-area'));
+}
+
+/** بطاقة البصمة (تُستخدم للموظفة ولتبويب «بصمتي»). */
+function mountPunch(el, greet) {
+  var st = { inside: false, allow: false, checking: false, sum: null };
+  function draw() {
+    var s = st.sum;
+    var todayList = s.todayPunches.length ? s.todayPunches.map(function (p) {
+      var cls = p.type === 'in' ? (p.late > 0 ? 'late' : 'ontime') : 'out';
+      return '<span class="tm ' + cls + '" style="font-size:13px">' + (p.type === 'in' ? 'دخول ' : 'انصراف ') + esc(p.time) + '</span>';
+    }).join(' ') : '<span class="tiny">لا توجد بصمات اليوم</span>';
+    el.innerHTML =
+      '<div class="card"><div class="flex-between"><div>' +
+      (greet ? '<h2>أهلًا ' + esc(s.name) + ' 👋</h2>' : '<h2>بصمتي</h2>') +
+      '<div class="muted">' + esc([s.branch, s.title].filter(Boolean).join(' · ') || '—') + '</div>' +
+      '<div class="tiny">' + esc(s.todayLabel) + ' · الدوام ' + esc(s.schedule.start) + ' – ' + esc(s.schedule.end) + '</div></div>' +
+      '<span class="status-pill ' + s.status + '"><i class="fa-solid ' + (s.status === 'in' ? 'fa-circle-check' : 'fa-circle-minus') + '"></i>' + (s.status === 'in' ? 'داخل الآن' : 'خارج الآن') + '</span></div>' +
+      (s.zones.length ? '<div class="chip-list" style="margin-top:10px">' + s.zones.map(function (z) { return '<span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--pink)"></i> ' + esc(z) + '</span>'; }).join('') + '</div>' : '') +
+      '</div>' +
+      '<div class="card"><div id="loc-box"></div>' +
+      '<div class="att-grid" style="margin-top:14px">' +
+      '<button class="att-btn in" id="btn-in"><i class="fa-solid fa-fingerprint"></i><b>بصمة دخول</b><small>تسجيل الحضور</small></button>' +
+      '<button class="att-btn out" id="btn-out"><i class="fa-solid fa-person-walking-arrow-right"></i><b>بصمة انصراف</b><small>تسجيل الانصراف</small></button>' +
+      '</div><div id="punch-result" style="margin-top:12px"></div>' +
+      '<div class="divider"></div><div class="tiny" style="margin-bottom:6px">بصمات اليوم</div><div class="chip-list">' + todayList + '</div></div>';
+    $('btn-in').onclick = function () { punch('in', this); };
+    $('btn-out').onclick = function () { punch('out', this); };
+    drawLoc();
+  }
+  function drawLoc(r, err) {
+    var box = $('loc-box'); if (!box) return;
+    var en = st.inside || st.allow;
+    $('btn-in').disabled = !en || st.checking; $('btn-out').disabled = !en || st.checking;
+    if (st.checking) { box.innerHTML = '<div class="info-box loc"><i class="fa-solid fa-satellite-dish fa-beat-fade"></i><div>جارٍ تحديد موقعك…</div></div>'; return; }
+    if (err) { box.innerHTML = '<div class="err-box loc"><i class="fa-solid fa-location-crosshairs"></i><div>' + esc(err) + '<div style="margin-top:8px"><button class="btn sm ghost" id="loc-retry"><i class="fa-solid fa-rotate"></i> حاولي مرة ثانية</button></div></div></div>'; $('loc-retry').onclick = check; return; }
+    if (!r) { box.innerHTML = ''; return; }
+    if (r.noZones) { box.innerHTML = '<div class="hint-box loc"><i class="fa-solid fa-map-location-dot"></i><div>لا يوجد نطاق بصمة محدد لفرعك بعد. راجعي الإدارة.' + (st.allow ? '<br>البصمة مسموحة حاليًا من أي مكان.' : '') + '</div></div>'; return; }
+    if (r.inside) box.innerHTML = '<div class="ok-box loc"><i class="fa-solid fa-location-dot"></i><div><b>أنتِ داخل النطاق</b> — ' + esc(r.zoneName) + '<div class="tiny">تبعدين ' + r.distance + ' م عن المركز (المسموح ' + r.radius + ' م)</div></div></div>';
+    else box.innerHTML = '<div class="hint-box loc"><i class="fa-solid fa-location-dot"></i><div><b>أنتِ خارج النطاق</b> — تبعدين ' + r.distance + ' م عن ' + esc(r.zoneName) + ' (المسموح ' + r.radius + ' م)' + (st.allow ? '<br>البصمة من خارج النطاق مسموحة حاليًا.' : '<br>الأزرار تنفتح أول ما تكونين داخل الحضانة.') + '<div style="margin-top:8px"><button class="btn sm ghost" id="loc-retry"><i class="fa-solid fa-rotate"></i> تحديث الموقع</button></div></div></div>';
+    var rb = $('loc-retry'); if (rb) rb.onclick = check;
+  }
+  function check() {
+    st.checking = true; drawLoc();
+    getPosition().then(function (c) {
+      return api('checkLocation', { lat: c.latitude, lng: c.longitude, accuracy: c.accuracy });
+    }).then(function (r) {
+      st.checking = false; st.inside = !!r.inside; st.allow = !!r.allowOutside; drawLoc(r);
+    }).catch(function (e) { st.checking = false; st.inside = false; drawLoc(null, e.message); });
+  }
+  function punch(type, btn) {
+    btn.disabled = true;
+    var res = $('punch-result');
+    res.innerHTML = '<div class="info-box loc"><i class="fa-solid fa-satellite-dish fa-beat-fade"></i><div>جارٍ التحقق من موقعك وتسجيل البصمة…</div></div>';
+    getPosition().then(function (c) {
+      return api('punch', { type: type, lat: c.latitude, lng: c.longitude, accuracy: c.accuracy });
+    }).then(function (r) {
+      var extra = r.late > 0 ? '<br><b style="color:#B91C1C">متأخرة ' + r.late + ' دقيقة</b>' : r.early > 0 ? '<br><b style="color:#B45309">انصراف مبكر ' + r.early + ' دقيقة</b>' : '<br>في الوقت ✅';
+      res.innerHTML = '<div class="ok-box loc"><i class="fa-solid fa-circle-check"></i><div><b>تم تسجيل ' + (type === 'in' ? 'الدخول' : 'الانصراف') + ' الساعة ' + esc(r.time) + '</b><div class="tiny">' + esc(r.zoneName) + ' · ' + r.distance + ' م</div>' + extra + '</div></div>';
+      toast(type === 'in' ? 'تم تسجيل الدخول' : 'تم تسجيل الانصراف', 'ok');
+      if (S.reloadHistory) S.reloadHistory();
+      return api('summary').then(function (s) { st.sum = s; var keep = res.innerHTML; draw(); $('punch-result').innerHTML = keep; st.inside = true; drawLoc({ inside: true, zoneName: r.zoneName, distance: r.distance, radius: '' }); check(); });
+    }).catch(function (e) {
+      btn.disabled = false;
+      res.innerHTML = '<div class="err-box loc"><i class="fa-solid fa-circle-xmark"></i><div>' + esc(e.message) + '</div></div>';
+      if (e.code === 'outside_zone') check();
+    });
+  }
+  api('summary').then(function (s) { st.sum = s; st.allow = s.allowOutside; draw(); check(); })
+    .catch(function (e) { el.innerHTML = '<div class="err-box">' + esc(e.message) + '</div>'; });
+}
+
+function dayCells(d) {
+  var inC, outC;
+  if (d.in) inC = '<span class="tm ' + (d.in.late > 0 ? 'late' : 'ontime') + '">' + esc(d.in.time) + '</span>' + (d.in.late > 0 ? '<span class="sub-note r">متأخر ' + d.in.late + ' د</span>' : '') + (d.inCount > 1 ? '<span class="tiny"> (' + d.inCount + ')</span>' : '');
+  else inC = '<span class="tm no">— لم يبصم</span>';
+  if (d.out) outC = '<span class="tm out">' + esc(d.out.time) + '</span>' + (d.out.early > 0 ? '<span class="sub-note o">مبكر ' + d.out.early + ' د</span>' : '') + (d.outCount > 1 ? '<span class="tiny"> (' + d.outCount + ')</span>' : '');
+  else outC = '<span class="tm no">— لم يبصم</span>';
+  var p = d.in || d.out;
+  var locC = p ? (p.inside ? '<span class="pill ok"><i class="fa-solid fa-location-dot"></i> ' + esc(p.zone) + '</span>' : '<span class="pill no">خارج النطاق (' + p.distance + ' م)</span>') : '—';
+  var stC = d.status === 'ontime' ? '<span class="pill ok">مكتمل في الوقت</span>' : d.status === 'late' ? '<span class="pill no">متأخر ' + d.in.late + ' د</span>' : d.status === 'early' ? '<span class="pill wait">انصراف مبكر ' + d.out.early + ' د</span>' : '<span class="pill grey">غير مكتمل</span>';
+  return { inC: inC, outC: outC, locC: locC, stC: stC };
+}
+function legendHtml() {
+  return '<div class="legend"><span><i class="dot g"></i>دخول في الوقت</span><span><i class="dot r"></i>دخول متأخر</span><span><i class="dot o"></i>انصراف</span><span><i class="dot n"></i>لم يبصم</span></div>';
+}
+function mountHistory(el) {
+  el.innerHTML = '<div class="card"><h3><i class="fa-solid fa-clock-rotate-left" style="color:var(--pink)"></i> سجلي</h3>' +
+    '<div class="filters"><div><label>من</label><input type="date" id="h-from" value="' + monthStart() + '"></div><div><label>إلى</label><input type="date" id="h-to" value="' + today() + '"></div><div><button class="btn" id="h-go"><i class="fa-solid fa-magnifying-glass"></i> عرض</button></div></div>' +
+    '<div id="h-res" style="margin-top:14px"></div></div>';
+  function load() {
+    var b = $('h-go'); busy(b, true);
+    api('myAttendance', { from: $('h-from').value, to: $('h-to').value }).then(function (r) {
+      busy(b, false);
+      if (!r.days.length) { $('h-res').innerHTML = emptyHtml('fa-calendar-xmark', 'لا توجد بصمات في هذه الفترة'); return; }
+      var rows = r.days.map(function (d, i) { var c = dayCells(d); return '<tr><td>' + (i + 1) + '</td><td>' + esc(d.dayName) + '<br><span class="tiny">' + fmtDate(d.date) + '</span></td><td>' + c.inC + '</td><td>' + c.outC + '</td><td>' + c.locC + '</td><td>' + c.stC + '</td></tr>'; }).join('');
+      $('h-res').innerHTML = (r.lateDays ? '<div class="err-box" style="margin-bottom:12px"><i class="fa-solid fa-triangle-exclamation"></i> عندك <b>' + r.lateDays + '</b> يوم تأخير في هذه الفترة</div>' : '<div class="ok-box" style="margin-bottom:12px"><i class="fa-solid fa-star"></i> ما عندك أي تأخير في هذه الفترة</div>') +
+        legendHtml() + '<div class="table-wrap"><table class="att-table"><thead><tr><th>#</th><th>التاريخ</th><th>بصمة الدخول</th><th>بصمة الانصراف</th><th>الموقع</th><th>الحالة</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    }).catch(function (e) { busy(b, false); $('h-res').innerHTML = '<div class="err-box">' + esc(e.message) + '</div>'; });
+  }
+  $('h-go').onclick = load; load();
+  S.reloadHistory = function () { if ($('h-go')) load(); };
+}
+function mountAccount(el) {
+  el.innerHTML = '<div class="card"><h3><i class="fa-solid fa-user-gear" style="color:var(--pink)"></i> حسابي</h3><div id="my-devs" class="tiny">…</div>' +
+    '<div class="divider"></div><b style="font-size:14px">تغيير رقمي السري</b><div class="grid2"><div><label>الرقم الحالي</label><input id="cp-old" class="pin-input" style="font-size:20px;letter-spacing:8px" type="password" inputmode="numeric" maxlength="4"></div><div><label>الرقم الجديد</label><input id="cp-new" class="pin-input" style="font-size:20px;letter-spacing:8px" type="password" inputmode="numeric" maxlength="4"></div></div>' +
+    '<div class="btn-row" style="margin-top:12px"><button class="btn sm" id="cp-go">حفظ الرقم الجديد</button><button class="btn sm ghost" id="lo2"><i class="fa-solid fa-arrow-right-from-bracket"></i> تسجيل خروج</button></div></div>';
+  $('lo2').onclick = doLogout;
+  $('cp-go').onclick = function () {
+    var o = toArabicSafeDigits($('cp-old').value), n = toArabicSafeDigits($('cp-new').value), b = this;
+    if (!/^\d{4}$/.test(n)) return toast('الرقم الجديد ٤ أرقام', 'err');
+    busy(b, true);
+    api('changeMyPin', { oldPin: o, newPin: n }).then(function () { busy(b, false); $('cp-old').value = ''; $('cp-new').value = ''; toast('تم تغيير الرقم السري', 'ok'); }).catch(function (e) { busy(b, false); toast(e.message, 'err'); });
+  };
+  api('myDevices').then(function (list) {
+    $('my-devs').innerHTML = '<b style="font-size:14px;color:var(--ink)">أجهزتي</b><div class="chip-list" style="margin-top:6px">' + list.map(function (d) {
+      return '<span class="chip">' + esc(d.label) + (d.current ? ' (هذا الجهاز)' : '') + ' · ' + (d.status === 'approved' ? 'معتمد' : d.status === 'pending' ? 'بانتظار الموافقة' : 'موقوف') + '</span>';
+    }).join('') + '</div>';
+  }).catch(function () { $('my-devs').textContent = ''; });
+}
+
+/* =================== لوحة الإدارة =================== */
+var TABS = [
+  { k: 'overview', t: 'نظرة عامة', i: 'fa-chart-pie', r: ['supervisor', 'board', 'manager', 'developer'] },
+  { k: 'mypunch', t: 'بصمتي', i: 'fa-fingerprint', r: ['supervisor', 'manager', 'developer'] },
+  { k: 'attendance', t: 'سجل الحضور', i: 'fa-table-list', r: ['supervisor', 'board', 'manager', 'developer'] },
+  { k: 'employees', t: 'الموظفون', i: 'fa-users', r: ['supervisor', 'board', 'manager', 'developer'] },
+  { k: 'devices', t: 'الأجهزة', i: 'fa-mobile-screen', r: ['supervisor', 'manager', 'developer'] },
+  { k: 'branches', t: 'الفروع', i: 'fa-building', r: ['manager', 'developer'] },
+  { k: 'zones', t: 'النطاقات', i: 'fa-map-location-dot', r: ['developer'] },
+  { k: 'titles', t: 'المسميات', i: 'fa-id-badge', r: ['supervisor', 'manager', 'developer'] },
+  { k: 'schedule', t: 'الدوام والتأخير', i: 'fa-business-time', r: ['supervisor', 'board', 'manager', 'developer'] },
+  { k: 'export', t: 'التصدير', i: 'fa-file-arrow-down', r: ['supervisor', 'board', 'manager', 'developer'] },
+  { k: 'audit', t: 'سجل العمليات', i: 'fa-shield-halved', r: ['developer'] },
+  { k: 'settings', t: 'الإعدادات', i: 'fa-gear', r: ['developer'] },
+  { k: 'account', t: 'حسابي', i: 'fa-user', r: ['supervisor', 'board', 'manager', 'developer'] }
+];
+function canEdit() { return ['supervisor', 'manager', 'developer'].indexOf(S.me.role) >= 0; }
+function isDev() { return S.me.role === 'developer'; }
+function allScope() { return ['board', 'manager', 'developer'].indexOf(S.me.role) >= 0; }
+
+function renderAdmin() {
+  $('app').innerHTML = '<div class="boot">' + logoHtml('', 120) + '<div style="margin-top:14px"><i class="fa-solid fa-circle-notch fa-spin"></i></div></div>';
+  api('adminInit').then(function (d) {
+    S.admin = d; S.me = d.me;
+    var tabs = TABS.filter(function (t) { return t.r.indexOf(S.me.role) >= 0; });
+    if (!S.tab || !tabs.some(function (t) { return t.k === S.tab; })) S.tab = 'overview';
+    var branchSel = allScope() && d.branches.length > 1 ? '<select id="branch-pick" style="width:auto;padding:8px 12px;font-size:14px"><option value="">كل الفروع</option>' + d.branches.map(function (b) { return '<option value="' + esc(b.id) + '"' + (S.branch === b.id ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join('') + '</select>' : '';
+    var myBranch = !allScope() && d.branches[0] ? d.branches[0].name : 'لوحة الإدارة';
+    $('app').innerHTML = topbar(myBranch) + '<div class="wrap"><div class="flex-between" style="margin-bottom:6px"><div class="tabs" id="tabs">' +
+      tabs.map(function (t) { return '<button class="tab' + (t.k === S.tab ? ' active' : '') + '" data-k="' + t.k + '"><i class="fa-solid ' + t.i + '"></i> ' + t.t + '</button>'; }).join('') +
+      '</div>' + branchSel + '</div><div id="tab-body"></div></div>';
+    $('logout-btn').onclick = doLogout;
+    document.querySelectorAll('#tabs .tab').forEach(function (b) { b.onclick = function () { S.tab = b.dataset.k; document.querySelectorAll('#tabs .tab').forEach(function (x) { x.classList.toggle('active', x === b); }); showTab(); }; });
+    var bp = $('branch-pick'); if (bp) bp.onchange = function () { S.branch = bp.value; showTab(); };
+    showTab();
+  }).catch(function (e) { if (e.code !== 'auth') $('app').innerHTML = '<div class="center-wrap"><div class="err-box">' + esc(e.message) + '</div><button class="btn" style="margin-top:12px" onclick="location.reload()">إعادة المحاولة</button></div>'; });
+}
+function showTab() {
+  var el = $('tab-body');
+  el.innerHTML = '<div class="loading"><i class="fa-solid fa-circle-notch fa-spin"></i></div>';
+  var fn = { overview: tabOverview, mypunch: function (e) { e.innerHTML = '<div id="mp"></div><div id="mh"></div>'; mountPunch($('mp'), false); mountHistory($('mh')); }, attendance: tabAttendance, employees: tabEmployees, devices: tabDevices, branches: tabBranches, zones: tabZones, titles: tabTitles, schedule: tabSchedule, export: tabExport, audit: tabAudit, settings: tabSettings, account: mountAccount }[S.tab];
+  fn(el);
+}
+function failBox(el) { return function (e) { if (e.code !== 'auth') el.innerHTML = '<div class="err-box">' + esc(e.message) + '</div>'; }; }
+function branchOptions(sel, withAll) {
+  return (withAll ? '<option value="">' + esc(withAll) + '</option>' : '') + (S.admin.branches || []).map(function (b) { return '<option value="' + esc(b.id) + '"' + (String(sel) === String(b.id) ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join('');
+}
+
+/* ----- نظرة عامة ----- */
+function tabOverview(el) {
+  api('stats', { branch_id: S.branch }).then(function (s) {
+    el.innerHTML = '<div class="stats">' +
+      '<div class="stat"><i class="fa-solid fa-users"></i><b>' + s.employees + '</b><span>الموظفات والمشرفات</span></div>' +
+      '<div class="stat"><i class="fa-solid fa-user-check" style="color:var(--green)"></i><b>' + s.presentToday + '</b><span>حضروا اليوم</span></div>' +
+      '<div class="stat"><i class="fa-solid fa-user-clock" style="color:var(--red)"></i><b>' + s.lateToday + '</b><span>متأخرون اليوم</span></div>' +
+      '<div class="stat' + (s.pendingDevices && canEdit() ? ' click' : '') + '" id="st-pend"><i class="fa-solid fa-mobile-screen" style="color:var(--amber)"></i><b>' + s.pendingDevices + '</b><span>أجهزة بانتظار الموافقة</span></div>' +
+      '<div class="stat"><i class="fa-solid fa-building" style="color:var(--blue-d)"></i><b>' + s.branches + '</b><span>الفروع</span></div></div>' +
+      (s.pendingDevices && canEdit() ? '<div class="hint-box" style="margin-bottom:16px"><i class="fa-solid fa-bell"></i> في ' + s.pendingDevices + ' جهاز بانتظار موافقتك. <a href="#" id="go-dev">افتحي الأجهزة</a></div>' : '') +
+      '<div class="card"><h3>لم يبصموا دخول اليوم (' + s.absentNames.length + ')</h3>' + (s.absentNames.length ? '<div class="chip-list">' + s.absentNames.map(function (n) { return '<span class="chip">' + esc(n) + '</span>'; }).join('') + '</div>' : '<div class="ok-box">الكل بصم اليوم ✅</div>') + '</div>';
+    var go = function (e) { if (e) e.preventDefault(); S.tab = 'devices'; renderAdmin(); };
+    if ($('go-dev')) $('go-dev').onclick = go;
+    if (s.pendingDevices && canEdit()) $('st-pend').onclick = go;
+  }).catch(failBox(el));
+}
+
+/* ----- سجل الحضور ----- */
+var empCache = null;
+function loadEmployeesList() { return api('employees', { branch_id: S.branch }).then(function (l) { empCache = l; return l; }); }
+function tabAttendance(el) {
+  el.innerHTML = '<div class="card"><div class="filters">' +
+    '<div><label>من</label><input type="date" id="a-from" value="' + today() + '"></div>' +
+    '<div><label>إلى</label><input type="date" id="a-to" value="' + today() + '"></div>' +
+    '<div><label>الموظفة</label><select id="a-emp"><option value="">الكل</option></select></div>' +
+    '<div><label>النوع</label><select id="a-type"><option value="all">الكل</option><option value="late">المتأخرون</option><option value="early">انصراف مبكر</option><option value="incomplete">غير مكتمل</option><option value="ontime">في الوقت</option></select></div>' +
+    '<div><button class="btn" id="a-go"><i class="fa-solid fa-magnifying-glass"></i> عرض</button></div></div>' +
+    '<div class="btn-row" style="margin-top:10px"><button class="btn sm ghost" data-r="today">اليوم</button><button class="btn sm ghost" data-r="week">آخر ٧ أيام</button><button class="btn sm ghost" data-r="month">هذا الشهر</button></div></div>' +
+    '<div id="a-res"></div>' + (isDev() ? '<div id="a-dev"></div>' : '');
+  loadEmployeesList().then(function (l) { $('a-emp').innerHTML = '<option value="">الكل</option>' + l.map(function (e) { return '<option value="' + esc(e.id) + '">' + esc(e.name) + '</option>'; }).join(''); }).catch(function () {});
+  el.querySelectorAll('[data-r]').forEach(function (b) {
+    b.onclick = function () {
+      var t = today(), f = t;
+      if (b.dataset.r === 'week') { var d = new Date(t + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() - 6); f = d.toISOString().slice(0, 10); }
+      if (b.dataset.r === 'month') f = monthStart();
+      $('a-from').value = f; $('a-to').value = t; load();
+    };
+  });
+  function load() {
+    var b = $('a-go'); busy(b, true);
+    api('attendanceDaily', { from: $('a-from').value, to: $('a-to').value, employee_id: $('a-emp').value, type: $('a-type').value, branch_id: S.branch }).then(function (r) {
+      busy(b, false);
+      if (!r.rows.length) { $('a-res').innerHTML = '<div class="card">' + emptyHtml('fa-calendar-xmark', 'لا توجد بصمات بهذه الفلاتر') + '</div>'; return; }
+      var rows = r.rows.map(function (d, i) {
+        var c = dayCells(d);
+        return '<tr><td>' + (i + 1) + '</td><td>' + esc(d.dayName) + '<br><span class="tiny">' + fmtDate(d.date) + '</span></td><td><b>' + esc(d.name) + '</b>' + (allScope() ? '<br><span class="tiny">' + esc(d.branch) + '</span>' : '') + '</td><td>' + c.inC + '</td><td>' + c.outC + '</td><td>' + c.locC + '</td><td>' + c.stC + '</td><td><button class="btn sm ghost" data-e="' + esc(d.employee_id) + '" data-d="' + esc(d.date) + '"><i class="fa-solid fa-eye"></i> تفاصيل</button></td></tr>';
+      }).join('');
+      $('a-res').innerHTML = legendHtml() + '<div class="card" style="padding:12px"><div class="tiny" style="margin-bottom:8px">' + r.total + ' سطر</div><div class="table-wrap"><table class="att-table"><thead><tr><th>#</th><th>التاريخ</th><th>الموظفة</th><th>الدخول</th><th>الانصراف</th><th>الموقع</th><th>الحالة</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+      $('a-res').querySelectorAll('[data-e]').forEach(function (x) { x.onclick = function () { dayDetail(x.dataset.e, x.dataset.d, load); }; });
+    }).catch(function (e) { busy(b, false); failBox($('a-res'))(e); });
+  }
+  $('a-go').onclick = load; load();
+  if (isDev()) devAttendanceTools($('a-dev'), load);
+}
+function dayDetail(eid, date, reload) {
+  openModal('تفاصيل اليوم', '<div class="loading"><i class="fa-solid fa-circle-notch fa-spin"></i></div>');
+  api('dayDetail', { employee_id: eid, date: date }).then(function (r) {
+    var rows = r.punches.map(function (p) {
+      var cls = p.type === 'in' ? (p.late > 0 ? 'late' : 'ontime') : 'out';
+      return '<tr><td><span class="tm ' + cls + '">' + esc(p.time) + '</span><br><span class="tiny">' + (p.type === 'in' ? 'دخول' : 'انصراف') + (p.late ? ' · متأخر ' + p.late + ' د' : '') + (p.early ? ' · مبكر ' + p.early + ' د' : '') + (p.cleared ? ' · مُصفّر' : '') + '</span></td>' +
+        '<td>' + (p.inside ? '<span class="pill ok">' + esc(p.zone) + '</span>' : '<span class="pill no">خارج</span>') + '<br><span class="tiny">' + p.distance + ' م · دقة ' + esc(p.accuracy) + ' م</span></td>' +
+        '<td><a class="btn sm ghost" target="_blank" rel="noopener" href="https://www.google.com/maps?q=' + encodeURIComponent(p.lat + ',' + p.lng) + '"><i class="fa-solid fa-map"></i></a></td>' +
+        (isDev() ? '<td><div class="btn-row"><button class="btn sm amber" data-cl="' + esc(p.id) + '" title="تصفير التأخير"><i class="fa-solid fa-eraser"></i></button><button class="btn sm danger" data-del="' + esc(p.id) + '" title="حذف"><i class="fa-solid fa-trash"></i></button></div></td>' : '') + '</tr>';
+    }).join('');
+    $('modal-body').innerHTML = '<div class="muted" style="margin-bottom:10px"><b>' + esc(r.name) + '</b> — ' + esc(r.dayName) + ' ' + fmtDate(r.date) + '</div>' +
+      (r.punches.length ? '<div class="table-wrap"><table><thead><tr><th>الوقت</th><th>الموقع</th><th>خريطة</th>' + (isDev() ? '<th>إجراء</th>' : '') + '</tr></thead><tbody>' + rows + '</tbody></table></div>' : emptyHtml('fa-calendar-xmark', 'لا توجد بصمات')) +
+      (isDev() && r.punches.length ? '<button class="btn danger sm" id="del-day" style="margin-top:12px"><i class="fa-solid fa-trash"></i> حذف كل بصمات هذا اليوم لهذه الموظفة</button>' : '');
+    $('modal-body').querySelectorAll('[data-del]').forEach(function (b) {
+      b.onclick = function () { confirmBox('حذف هذه البصمة نهائيًا؟', { danger: true, yes: 'حذف' }).then(function (ok) { if (!ok) return dayDetail(eid, date, reload); api('deleteAttendance', { mode: 'one', id: b.dataset.del }).then(function () { toast('تم الحذف', 'ok'); reload(); dayDetail(eid, date, reload); }).catch(function (e) { toast(e.message, 'err'); }); }); };
+    });
+    $('modal-body').querySelectorAll('[data-cl]').forEach(function (b) {
+      b.onclick = function () { api('clearLateness', { mode: 'one', id: b.dataset.cl }).then(function () { toast('تم التصفير', 'ok'); reload(); dayDetail(eid, date, reload); }).catch(function (e) { toast(e.message, 'err'); }); };
+    });
+    if ($('del-day')) $('del-day').onclick = function () { confirmBox('حذف كل بصمات ' + r.name + ' في ' + fmtDate(r.date) + '؟', { danger: true, yes: 'حذف' }).then(function (ok) { if (!ok) return; api('deleteAttendance', { mode: 'emp_day', employee_id: eid, date: date }).then(function (x) { toast('تم حذف ' + x.deleted + ' بصمة', 'ok'); reload(); }).catch(function (e) { toast(e.message, 'err'); }); }); };
+  }).catch(function (e) { $('modal-body').innerHTML = '<div class="err-box">' + esc(e.message) + '</div>'; });
+}
+function devAttendanceTools(el, reload) {
+  el.innerHTML = '<div class="card"><h3><i class="fa-solid fa-screwdriver-wrench" style="color:var(--amber)"></i> أدوات المطوّر</h3>' +
+    '<div class="grid2"><div><label>الموظفة</label><select id="dv-emp"><option value="">— اختر —</option></select></div><div><label>اليوم</label><input type="date" id="dv-day" value="' + today() + '"></div></div>' +
+    '<div class="btn-row" style="margin-top:12px">' +
+    '<button class="btn sm danger" id="dv1"><i class="fa-solid fa-trash"></i> حذف كل بصمات الموظفة</button>' +
+    '<button class="btn sm danger" id="dv2"><i class="fa-solid fa-calendar-xmark"></i> حذف بصمات اليوم (للكل)</button>' +
+    '<button class="btn sm amber" id="dv3"><i class="fa-solid fa-eraser"></i> تصفير تأخيرات الموظفة</button>' +
+    '<button class="btn sm amber" id="dv4"><i class="fa-solid fa-eraser"></i> تصفير كل التأخيرات</button>' +
+    '<button class="btn sm danger" id="dv5"><i class="fa-solid fa-bomb"></i> حذف كل السجل</button></div></div>';
+  (empCache ? Promise.resolve(empCache) : loadEmployeesList()).then(function (l) { $('dv-emp').innerHTML = '<option value="">— اختر —</option>' + l.map(function (e) { return '<option value="' + esc(e.id) + '">' + esc(e.name) + '</option>'; }).join(''); });
+  function emp() { var v = $('dv-emp').value; if (!v) toast('اختر الموظفة', 'err'); return v; }
+  function empName() { var s = $('dv-emp'); return s.options[s.selectedIndex].text; }
+  $('dv1').onclick = function () { var e = emp(); if (!e) return; confirmBox('حذف كل بصمات ' + empName() + ' نهائيًا؟', { danger: true }).then(function (ok) { if (ok) api('deleteAttendance', { mode: 'emp_all', employee_id: e }).then(function (r) { toast('تم حذف ' + r.deleted, 'ok'); reload(); }).catch(function (x) { toast(x.message, 'err'); }); }); };
+  $('dv2').onclick = function () { var d = $('dv-day').value; confirmBox('حذف كل بصمات يوم ' + fmtDate(d) + ' لكل الموظفين؟', { danger: true }).then(function (ok) { if (ok) api('deleteAttendance', { mode: 'day', date: d }).then(function (r) { toast('تم حذف ' + r.deleted, 'ok'); reload(); }).catch(function (x) { toast(x.message, 'err'); }); }); };
+  $('dv3').onclick = function () { var e = emp(); if (!e) return; confirmBox('تصفير كل تأخيرات ' + empName() + '؟').then(function (ok) { if (ok) api('clearLateness', { mode: 'emp', employee_id: e }).then(function (r) { toast('تم تصفير ' + r.cleared, 'ok'); reload(); }).catch(function (x) { toast(x.message, 'err'); }); }); };
+  $('dv4').onclick = function () { confirmBox('تصفير كل التأخيرات لكل الموظفين؟').then(function (ok) { if (ok) api('clearLateness', { mode: 'all' }).then(function (r) { toast('تم تصفير ' + r.cleared, 'ok'); reload(); }).catch(function (x) { toast(x.message, 'err'); }); }); };
+  $('dv5').onclick = function () { confirmBox('حذف كل سجل البصمات نهائيًا لكل الفروع؟ لا يمكن التراجع.', { danger: true, typed: 'حذف الكل', yes: 'حذف الكل' }).then(function (v) { if (v) api('deleteAttendance', { mode: 'all', confirm: v }).then(function (r) { toast('تم حذف ' + r.deleted, 'ok'); reload(); }).catch(function (x) { toast(x.message, 'err'); }); }); };
+}
+
+/* ----- الموظفون ----- */
+function tabEmployees(el) {
+  var showArch = false;
+  function load() {
+    el.innerHTML = '<div class="flex-between" style="margin-bottom:12px">' + (canEdit() ? '<button class="btn" id="e-add" style="width:auto"><i class="fa-solid fa-user-plus"></i> إضافة حساب</button>' : '<span></span>') +
+      (isDev() ? '<label style="display:flex;gap:6px;align-items:center;margin:0;font-weight:500"><input type="checkbox" id="e-arch"' + (showArch ? ' checked' : '') + '> إظهار المحذوفين</label>' : '') + '</div><div id="e-list"><div class="loading"><i class="fa-solid fa-circle-notch fa-spin"></i></div></div>';
+    if ($('e-add')) $('e-add').onclick = function () { employeeForm(null, load); };
+    if ($('e-arch')) $('e-arch').onchange = function () { showArch = this.checked; load(); };
+    api('employees', { branch_id: S.branch, archived: showArch }).then(function (l) {
+      empCache = l;
+      if (!l.length) { $('e-list').innerHTML = '<div class="card">' + emptyHtml('fa-users', 'لا توجد حسابات بعد') + '</div>'; return; }
+      $('e-list').innerHTML = '<div class="card" style="padding:12px"><div class="table-wrap"><table><thead><tr><th>الاسم</th><th>الدور</th><th>الفرع</th><th>المسمى</th><th>الجوال</th><th>الأجهزة</th><th>الحالة</th>' + (canEdit() ? '<th>إجراءات</th>' : '') + '</tr></thead><tbody>' +
+        l.map(function (e) {
+          var st = e.archived ? '<span class="pill grey">محذوف</span>' : e.active ? '<span class="pill ok">فعّال</span>' : '<span class="pill no">موقوف</span>';
+          var acts = '';
+          if (canEdit() && !e.archived && canManage(e)) {
+            acts = '<div class="btn-row"><button class="btn sm ghost" data-a="edit" data-id="' + e.id + '"><i class="fa-solid fa-pen"></i></button>' +
+              (canPin(e) ? '<button class="btn sm ghost" data-a="pin" data-id="' + e.id + '" title="تغيير الرقم السري"><i class="fa-solid fa-key"></i></button>' : '') +
+              (e.role !== 'developer' || isDev() ? '<button class="btn sm ' + (e.active ? 'ghost' : 'green') + '" data-a="act" data-id="' + e.id + '" title="' + (e.active ? 'إيقاف' : 'تفعيل') + '"><i class="fa-solid ' + (e.active ? 'fa-user-slash' : 'fa-user-check') + '"></i></button>' : '') +
+              (isDev() ? '<button class="btn sm ghost" data-a="zones" data-id="' + e.id + '" title="نطاقات مخصصة"><i class="fa-solid fa-map-pin"></i></button>' : '') +
+              (isDev() && e.role !== 'developer' ? '<button class="btn sm danger" data-a="del" data-id="' + e.id + '" title="حذف"><i class="fa-solid fa-trash"></i></button>' : '') + '</div>';
+          } else if (isDev() && e.archived) acts = '<button class="btn sm green" data-a="restore" data-id="' + e.id + '">استرجاع</button>';
+          return '<tr><td><b>' + esc(e.name) + '</b>' + (e.hasCustomZones ? ' <i class="fa-solid fa-map-pin" style="color:var(--pink)" title="نطاقات مخصصة"></i>' : '') + '</td><td><span class="role-chip ' + esc(e.role) + '">' + esc(e.roleAr) + (e.role === 'developer' ? ' 🔒' : '') + '</span></td><td>' + esc(e.branch || '—') + '</td><td>' + esc(e.title || '—') + '</td><td class="ltr">' + esc(e.phone || '') + '</td><td>' + e.devices + (e.pending ? ' <span class="pill wait">+' + e.pending + '</span>' : '') + '</td><td>' + st + '</td>' + (canEdit() ? '<td>' + acts + '</td>' : '') + '</tr>';
+        }).join('') + '</tbody></table></div><div class="tiny" style="margin-top:8px">' + l.length + ' حساب</div></div>';
+      $('e-list').querySelectorAll('[data-a]').forEach(function (b) {
+        var e = l.filter(function (x) { return x.id === b.dataset.id; })[0];
+        b.onclick = function () {
+          var a = b.dataset.a;
+          if (a === 'edit') employeeForm(e, load);
+          else if (a === 'pin') pinForm(e);
+          else if (a === 'zones') employeeZonesForm(e, load);
+          else if (a === 'act') confirmBox((e.active ? 'إيقاف حساب ' : 'تفعيل حساب ') + e.name + '؟', { danger: e.active }).then(function (ok) { if (ok) api('setEmployeeActive', { id: e.id, active: !e.active }).then(function () { toast('تم', 'ok'); load(); }).catch(function (x) { toast(x.message, 'err'); }); });
+          else if (a === 'del') confirmBox('حذف حساب ' + e.name + '؟ الحساب ينقفل ويختفي من القوائم، وبصماته وسجله تبقى محفوظة.', { danger: true, yes: 'حذف' }).then(function (ok) { if (ok) api('archiveEmployee', { id: e.id }).then(function () { toast('تم الحذف', 'ok'); load(); }).catch(function (x) { toast(x.message, 'err'); }); });
+          else if (a === 'restore') api('archiveEmployee', { id: e.id, restore: true }).then(function () { toast('تم الاسترجاع', 'ok'); load(); }).catch(function (x) { toast(x.message, 'err'); });
+        };
+      });
+    }).catch(failBox($('e-list')));
+  }
+  load();
+}
+function canManage(e) {
+  if (isDev()) return true;
+  if (S.me.role === 'manager') return e.role !== 'developer';
+  if (S.me.role === 'supervisor') return e.role === 'employee';
+  return false;
+}
+function canPin(e) { return isDev() || (e.role !== 'developer' && e.role !== 'manager') || e.name === S.me.name; }
+function employeeForm(e, done) {
+  var isNew = !e; e = e || { name: '', phone: '', title_id: '', branch_id: S.branch || (S.admin.branches[0] ? S.admin.branches[0].id : ''), role: 'employee' };
+  var roles = S.admin.assignable.slice();
+  if (!isNew && !roles.some(function (r) { return r.key === e.role; })) roles = [{ key: e.role, label: ROLE_AR[e.role] }];
+  openModal(isNew ? 'إضافة حساب جديد' : 'تعديل ' + e.name,
+    '<label>الاسم</label><input id="f-name" value="' + esc(e.name) + '" maxlength="80">' +
+    '<div class="grid2"><div><label>الجوال (اختياري)</label><input id="f-phone" class="ltr" inputmode="tel" value="' + esc(e.phone) + '"></div>' +
+    '<div><label>المسمى الوظيفي</label><select id="f-title"><option value="">—</option>' + S.admin.titles.map(function (t) { return '<option value="' + esc(t.id) + '"' + (t.id === e.title_id ? ' selected' : '') + '>' + esc(t.name) + '</option>'; }).join('') + '</select></div></div>' +
+    '<div class="grid2">' + (S.me.role !== 'supervisor' ? '<div><label>الفرع</label><select id="f-branch"><option value="">—</option>' + branchOptions(e.branch_id) + '</select></div>' : '') +
+    '<div><label>الدور</label><select id="f-role"' + (roles.length < 2 ? ' disabled' : '') + '>' + roles.map(function (r) { return '<option value="' + r.key + '"' + (r.key === e.role ? ' selected' : '') + '>' + esc(r.label) + '</option>'; }).join('') + '</select></div></div>' +
+    (isNew ? '<label>الرقم السري (٤ أرقام)</label><input id="f-pin" class="pin-input" type="tel" inputmode="numeric" maxlength="4" autocomplete="off"><div class="tiny">الرقم ما يتكرر بين حسابين. بلّغي الموظفة فيه، وأول جوال تدخل منه ينربط بحسابها.</div>' : '') +
+    '<button class="btn" id="f-save" style="margin-top:16px"><i class="fa-solid fa-floppy-disk"></i> حفظ</button>');
+  $('f-save').onclick = function () {
+    var b = this, args = { id: isNew ? '' : e.id, name: $('f-name').value, phone: toArabicSafeDigits($('f-phone').value), title_id: $('f-title').value, role: $('f-role').value, branch_id: $('f-branch') ? $('f-branch').value : '' };
+    if (isNew) { args.pin = toArabicSafeDigits($('f-pin').value); if (!/^\d{4}$/.test(args.pin)) return toast('الرقم السري ٤ أرقام', 'err'); }
+    if (!args.name.trim()) return toast('اكتبي الاسم', 'err');
+    busy(b, true);
+    api('saveEmployee', args).then(function () { closeModal(); toast(isNew ? 'تمت الإضافة' : 'تم الحفظ', 'ok'); done(); }).catch(function (x) { busy(b, false); toast(x.message, 'err'); });
+  };
+}
+function pinForm(e) {
+  openModal('تغيير الرقم السري — ' + e.name, '<label>الرقم الجديد (٤ أرقام)</label><input id="p-new" class="pin-input" type="tel" inputmode="numeric" maxlength="4" autocomplete="off"><button class="btn" id="p-save" style="margin-top:14px">حفظ</button>');
+  $('p-save').onclick = function () {
+    var p = toArabicSafeDigits($('p-new').value), b = this;
+    if (!/^\d{4}$/.test(p)) return toast('الرقم ٤ أرقام', 'err');
+    busy(b, true);
+    api('resetPin', { id: e.id, pin: p }).then(function () { closeModal(); toast('تم تغيير الرقم السري', 'ok'); }).catch(function (x) { busy(b, false); toast(x.message, 'err'); });
+  };
+}
+function employeeZonesForm(e, done) {
+  openModal('نطاقات مخصصة — ' + e.name, '<div class="loading"><i class="fa-solid fa-circle-notch fa-spin"></i></div>');
+  Promise.all([api('zones', {}), api('employeeZones', { employee_id: e.id })]).then(function (r) {
+    var zones = r[0], mine = r[1];
+    $('modal-body').innerHTML = '<div class="info-box" style="margin-bottom:10px">إذا ما اخترت شي، الموظفة تبصم من نطاقات فرعها. إذا اخترت نطاقات، تبصم منها هي بس.</div><div class="checklist">' +
+      (zones.length ? zones.map(function (z) { return '<label><input type="checkbox" value="' + esc(z.id) + '"' + (mine.indexOf(z.id) >= 0 ? ' checked' : '') + '> ' + esc(z.name) + ' <span class="tiny">(' + esc(z.branch) + ' · ' + esc(z.radius) + ' م)</span></label>'; }).join('') : '<div class="tiny">لا توجد نطاقات</div>') +
+      '</div><button class="btn" id="z-save" style="margin-top:14px">حفظ</button>';
+    $('z-save').onclick = function () {
+      var ids = Array.prototype.map.call($('modal-body').querySelectorAll('input:checked'), function (i) { return i.value; }), b = this;
+      busy(b, true);
+      api('setEmployeeZones', { employee_id: e.id, zone_ids: ids }).then(function () { closeModal(); toast('تم الحفظ', 'ok'); done(); }).catch(function (x) { busy(b, false); toast(x.message, 'err'); });
+    };
+  }).catch(function (x) { $('modal-body').innerHTML = '<div class="err-box">' + esc(x.message) + '</div>'; });
+}
+
+/* ----- الأجهزة ----- */
+function tabDevices(el) {
+  var status = 'pending';
+  function load() {
+    el.innerHTML = '<div class="btn-row" style="margin-bottom:12px">' + [['pending', 'بانتظار الموافقة'], ['approved', 'معتمدة'], ['revoked', 'موقوفة'], ['', 'الكل']].map(function (s) { return '<button class="tab' + (status === s[0] ? ' active' : '') + '" data-s="' + s[0] + '">' + s[1] + '</button>'; }).join('') + '</div><div id="d-list"><div class="loading"><i class="fa-solid fa-circle-notch fa-spin"></i></div></div>';
+    el.querySelectorAll('[data-s]').forEach(function (b) { b.onclick = function () { status = b.dataset.s; load(); }; });
+    api('devices', { status: status, branch_id: S.branch }).then(function (l) {
+      if (!l.length) { $('d-list').innerHTML = '<div class="card">' + emptyHtml('fa-mobile-screen', status === 'pending' ? 'لا توجد أجهزة بانتظار الموافقة' : 'لا توجد أجهزة') + '</div>'; return; }
+      $('d-list').innerHTML = '<div class="card" style="padding:12px"><div class="table-wrap"><table><thead><tr><th>الموظفة</th><th>الجهاز</th><th>الحالة</th><th>التسجيل</th><th>آخر استخدام</th><th>إجراءات</th></tr></thead><tbody>' +
+        l.map(function (d) {
+          var st = d.status === 'approved' ? '<span class="pill ok">معتمد</span>' : d.status === 'pending' ? '<span class="pill wait">بانتظار الموافقة</span>' : '<span class="pill no">موقوف</span>';
+          var acts = d.canAct ? '<div class="btn-row">' + (d.status !== 'approved' ? '<button class="btn sm green" data-a="approve" data-id="' + d.id + '"><i class="fa-solid fa-check"></i> اعتماد</button>' : '') +
+            (d.status !== 'revoked' ? '<button class="btn sm ghost" data-a="revoke" data-id="' + d.id + '"><i class="fa-solid fa-ban"></i> إيقاف</button>' : '') +
+            (d.locked ? '<button class="btn sm amber" data-a="unlock" data-id="' + d.id + '"><i class="fa-solid fa-lock-open"></i> فك القفل</button>' : '') +
+            '<button class="btn sm danger" data-a="delete" data-id="' + d.id + '"><i class="fa-solid fa-trash"></i></button></div>' : '<span class="tiny">—</span>';
+          return '<tr><td><b>' + esc(d.employee) + '</b><br><span class="tiny">' + esc(d.roleAr) + (d.branch ? ' · ' + esc(d.branch) : '') + '</span></td><td>' + esc(d.ua || '—') + '<br><span class="tiny">' + esc(d.label) + '</span>' + (d.locked ? ' <span class="pill no">مقفول</span>' : '') + '</td><td>' + st + '</td><td class="ltr">' + esc(d.created) + '</td><td class="ltr">' + esc(d.lastSeen) + '</td><td>' + acts + '</td></tr>';
+        }).join('') + '</tbody></table></div></div>';
+      $('d-list').querySelectorAll('[data-a]').forEach(function (b) {
+        b.onclick = function () {
+          var a = b.dataset.a;
+          var go = function () { busy(b, true); api('deviceAction', { id: b.dataset.id, act: a }).then(function () { toast('تم', 'ok'); load(); }).catch(function (x) { busy(b, false); toast(x.message, 'err'); }); };
+          if (a === 'delete' || a === 'revoke') confirmBox(a === 'delete' ? 'حذف هذا الجهاز؟ لو دخلت منه الموظفة مرة ثانية بيحتاج موافقة.' : 'إيقاف هذا الجهاز؟ ما تقدر الموظفة تدخل منه.', { danger: true }).then(function (ok) { if (ok) go(); });
+          else go();
+        };
+      });
+    }).catch(failBox($('d-list')));
+  }
+  load();
+}
+
+/* ----- الخريطة (Leaflet) ----- */
+var leafletReady = null;
+function loadLeaflet() {
+  if (leafletReady) return leafletReady;
+  leafletReady = new Promise(function (resolve, reject) {
+    var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css'; document.head.appendChild(l);
+    var s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+    s.onload = function () { resolve(window.L); }; s.onerror = function () { leafletReady = null; reject(new Error('تعذّر تحميل الخريطة')); };
+    document.head.appendChild(s);
+  });
+  return leafletReady;
+}
+/** يركّب خريطة لاختيار مركز ونصف قطر. */
+function mountMapPicker(container, init, onChange) {
+  container.innerHTML = '<div id="map"></div><div class="btn-row" style="margin-top:8px"><button class="btn sm blue" id="m-me" type="button"><i class="fa-solid fa-location-crosshairs"></i> استخدم موقعي الحالي</button></div><div class="tiny" style="margin-top:6px">اضغط على الخريطة لتحديد مركز النطاق. الدائرة تبيّن المسافة المسموحة.</div>';
+  loadLeaflet().then(function (L) {
+    var center = init.lat ? [Number(init.lat), Number(init.lng)] : [29.3375, 47.9744];
+    var map = L.map('map').setView(center, init.lat ? 17 : 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+    var marker = null, circle = null, cur = { lat: init.lat ? Number(init.lat) : null, lng: init.lng ? Number(init.lng) : null };
+    function set(lat, lng) {
+      cur.lat = Number(lat.toFixed(7)); cur.lng = Number(lng.toFixed(7));
+      if (!marker) { marker = L.marker([cur.lat, cur.lng]).addTo(map); circle = L.circle([cur.lat, cur.lng], { radius: init.radius(), color: '#EC4899', fillOpacity: .15 }).addTo(map); }
+      else { marker.setLatLng([cur.lat, cur.lng]); circle.setLatLng([cur.lat, cur.lng]); }
+      onChange(cur);
+    }
+    if (cur.lat) set(cur.lat, cur.lng);
+    map.on('click', function (e) { set(e.latlng.lat, e.latlng.lng); });
+    $('m-me').onclick = function () { var b = this; busy(b, true); getPosition().then(function (c) { busy(b, false); set(c.latitude, c.longitude); map.setView([c.latitude, c.longitude], 18); toast('الدقة ' + Math.round(c.accuracy) + ' م', 'ok'); }).catch(function (e) { busy(b, false); toast(e.message, 'err'); }); };
+    container._setRadius = function (r) { if (circle) circle.setRadius(r); };
+    setTimeout(function () { map.invalidateSize(); }, 300);
+  }).catch(function (e) { container.innerHTML = '<div class="err-box">' + esc(e.message) + '</div>'; });
+}
+
+/* ----- الفروع ----- */
+function tabBranches(el) {
+  function load() {
+    api('branches').then(function (l) {
+      el.innerHTML = '<button class="btn" id="b-add" style="width:auto;margin-bottom:12px"><i class="fa-solid fa-plus"></i> إضافة فرع</button><div class="card">' +
+        (l.length ? l.map(function (b) {
+          return '<div class="branch-card"><div class="flex-between"><div><b style="font-size:16px">' + esc(b.name) + '</b> ' + (b.active ? '' : '<span class="pill no">غير فعّال</span>') + '<div class="tiny">' + esc(b.address || '') + '</div></div><div class="btn-row"><button class="btn sm ghost" data-a="edit" data-id="' + b.id + '"><i class="fa-solid fa-pen"></i> تعديل</button>' + (isDev() ? '<button class="btn sm danger" data-a="del" data-id="' + b.id + '"><i class="fa-solid fa-trash"></i></button>' : '') + '</div></div>' +
+            '<div class="chip-list" style="margin-top:8px"><span class="chip"><i class="fa-solid fa-users"></i> ' + b.employees + ' حساب</span><span class="chip"><i class="fa-solid fa-clock"></i> ' + esc(b.schedule.start) + ' – ' + esc(b.schedule.end) + '</span>' +
+            (b.zones.length ? b.zones.map(function (z) { return '<span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--pink)"></i> ' + esc(z.name) + ' · ' + esc(z.radius) + ' م' + (z.active ? '' : ' (معطّل)') + '</span>'; }).join('') : '<span class="pill wait">لا يوجد نطاق بصمة</span>') + '</div></div>';
+        }).join('') : emptyHtml('fa-building', 'لا توجد فروع بعد')) + '</div>';
+      $('b-add').onclick = function () { branchForm(null, load); };
+      el.querySelectorAll('[data-a]').forEach(function (x) {
+        var b = l.filter(function (y) { return y.id === x.dataset.id; })[0];
+        x.onclick = function () {
+          if (x.dataset.a === 'edit') branchForm(b, load);
+          else confirmBox('حذف فرع ' + b.name + ' ونطاقاته؟', { danger: true }).then(function (ok) { if (ok) api('deleteBranch', { id: b.id }).then(function () { toast('تم الحذف', 'ok'); refreshInit(load); }).catch(function (e) { toast(e.message, 'err'); }); });
+        };
+      });
+    }).catch(failBox(el));
+  }
+  load();
+}
+function refreshInit(cb) { api('adminInit').then(function (d) { S.admin = d; if (cb) cb(); }).catch(function () { if (cb) cb(); }); }
+function branchForm(b, done) {
+  var isNew = !b; b = b || { name: '', address: '', active: true };
+  var zoneSec = isNew && isDev() ? '<div class="divider"></div><b>نطاق البصمة للفرع</b><div class="grid2"><div><label>اسم النطاق</label><input id="bz-name" placeholder="مثلًا: مبنى الحضانة"></div><div><label>المسافة المسموحة (متر)</label><input id="bz-r" type="number" value="150" min="20" max="5000"></div></div><div id="bz-map"></div>' : '';
+  openModal(isNew ? 'إضافة فرع' : 'تعديل ' + b.name,
+    '<label>اسم الفرع</label><input id="bf-name" value="' + esc(b.name) + '"><label>العنوان (اختياري)</label><input id="bf-addr" value="' + esc(b.address) + '">' +
+    (!isNew ? '<label style="display:flex;gap:8px;align-items:center;font-weight:500"><input type="checkbox" id="bf-act"' + (b.active ? ' checked' : '') + '> الفرع فعّال</label>' : '') +
+    zoneSec + '<button class="btn" id="bf-save" style="margin-top:16px">حفظ</button>');
+  var pt = {};
+  if (zoneSec) {
+    var mc = $('bz-map');
+    mountMapPicker(mc, { radius: function () { return Number($('bz-r').value) || 150; } }, function (c) { pt = c; });
+    $('bz-r').oninput = function () { if (mc._setRadius) mc._setRadius(Number(this.value) || 150); };
+  }
+  $('bf-save').onclick = function () {
+    var btn = this, args = { id: isNew ? '' : b.id, name: $('bf-name').value, address: $('bf-addr').value, lat: pt.lat || b.lat || '', lng: pt.lng || b.lng || '' };
+    if (!isNew) args.active = $('bf-act').checked;
+    if (zoneSec && pt.lat) args.zone = { name: $('bz-name').value, lat: pt.lat, lng: pt.lng, radius: $('bz-r').value };
+    busy(btn, true);
+    api('saveBranch', args).then(function () { closeModal(); toast('تم الحفظ', 'ok'); refreshInit(done); }).catch(function (e) { busy(btn, false); toast(e.message, 'err'); });
+  };
+}
+
+/* ----- النطاقات ----- */
+function tabZones(el) {
+  function load() {
+    api('zones', { branch_id: S.branch }).then(function (l) {
+      el.innerHTML = '<button class="btn" id="z-add" style="width:auto;margin-bottom:12px"><i class="fa-solid fa-plus"></i> إضافة نطاق</button><div class="card" style="padding:12px">' +
+        (l.length ? '<div class="table-wrap"><table><thead><tr><th>النطاق</th><th>الفرع</th><th>المسافة</th><th>الحالة</th><th>الموقع</th><th>إجراءات</th></tr></thead><tbody>' + l.map(function (z) {
+          return '<tr><td><b>' + esc(z.name) + '</b></td><td>' + esc(z.branch) + '</td><td>' + esc(z.radius) + ' م</td><td>' + (z.active ? '<span class="pill ok">فعّال</span>' : '<span class="pill no">معطّل</span>') + '</td><td><a class="btn sm ghost" target="_blank" rel="noopener" href="https://www.google.com/maps?q=' + encodeURIComponent(z.lat + ',' + z.lng) + '"><i class="fa-solid fa-map"></i></a></td><td><div class="btn-row"><button class="btn sm ghost" data-a="edit" data-id="' + z.id + '"><i class="fa-solid fa-pen"></i></button><button class="btn sm danger" data-a="del" data-id="' + z.id + '"><i class="fa-solid fa-trash"></i></button></div></td></tr>';
+        }).join('') + '</tbody></table></div>' : emptyHtml('fa-map-location-dot', 'لا توجد نطاقات بعد. أضف نطاقًا لكل فرع حتى تقدر الموظفات يبصمون.')) + '</div>';
+      $('z-add').onclick = function () { zoneForm(null, load); };
+      el.querySelectorAll('[data-a]').forEach(function (x) {
+        var z = l.filter(function (y) { return y.id === x.dataset.id; })[0];
+        x.onclick = function () {
+          if (x.dataset.a === 'edit') zoneForm(z, load);
+          else confirmBox('حذف نطاق ' + z.name + '؟', { danger: true }).then(function (ok) { if (ok) api('deleteZone', { id: z.id }).then(function () { toast('تم الحذف', 'ok'); load(); }).catch(function (e) { toast(e.message, 'err'); }); });
+        };
+      });
+    }).catch(failBox(el));
+  }
+  load();
+}
+function zoneForm(z, done) {
+  var isNew = !z; z = z || { name: '', branch_id: S.branch || (S.admin.branches[0] ? S.admin.branches[0].id : ''), radius: 150, active: true };
+  if (!S.admin.branches.length) return toast('أضف فرعًا أولًا', 'err');
+  openModal(isNew ? 'إضافة نطاق' : 'تعديل ' + z.name,
+    '<div class="grid2"><div><label>الفرع</label><select id="zf-b">' + branchOptions(z.branch_id) + '</select></div><div><label>اسم النطاق</label><input id="zf-n" value="' + esc(z.name) + '"></div></div>' +
+    '<div class="grid2"><div><label>المسافة المسموحة (متر)</label><input id="zf-r" type="number" min="20" max="5000" value="' + esc(z.radius) + '"></div>' + (!isNew ? '<div><label>&nbsp;</label><label style="display:flex;gap:8px;align-items:center;font-weight:500;margin:0"><input type="checkbox" id="zf-a"' + (z.active ? ' checked' : '') + '> فعّال</label></div>' : '') + '</div>' +
+    '<div id="zf-map"></div><button class="btn" id="zf-save" style="margin-top:16px">حفظ</button>');
+  var pt = { lat: z.lat || null, lng: z.lng || null }, mc = $('zf-map');
+  mountMapPicker(mc, { lat: z.lat, lng: z.lng, radius: function () { return Number($('zf-r').value) || 150; } }, function (c) { pt = c; });
+  $('zf-r').oninput = function () { if (mc._setRadius) mc._setRadius(Number(this.value) || 150); };
+  $('zf-save').onclick = function () {
+    var b = this, args = { id: isNew ? '' : z.id, branch_id: $('zf-b').value, name: $('zf-n').value, radius: $('zf-r').value, lat: pt.lat, lng: pt.lng };
+    if (!isNew) args.active = $('zf-a').checked;
+    if (!pt.lat) return toast('اختر مركز النطاق على الخريطة', 'err');
+    busy(b, true);
+    api('saveZone', args).then(function () { closeModal(); toast('تم الحفظ', 'ok'); done(); }).catch(function (e) { busy(b, false); toast(e.message, 'err'); });
+  };
+}
+
+/* ----- المسميات ----- */
+function tabTitles(el) {
+  function load() {
+    api('titles').then(function (l) {
+      S.admin.titles = l;
+      el.innerHTML = '<div class="card"><h3>المسميات الوظيفية</h3><div class="chip-list">' + (l.length ? l.map(function (t) { return '<span class="chip">' + esc(t.name) + (isDev() ? '<i class="fa-solid fa-xmark x" data-id="' + t.id + '" title="حذف"></i>' : '') + '</span>'; }).join('') : '<span class="tiny">لا توجد مسميات</span>') + '</div>' +
+        (canEdit() ? '<div class="flex-between" style="margin-top:14px;flex-wrap:nowrap"><input id="t-new" placeholder="مسمى جديد، مثلًا: معلمة"><button class="btn" id="t-add" style="width:auto">إضافة</button></div>' : '') + '</div>';
+      if ($('t-add')) $('t-add').onclick = function () { var b = this; busy(b, true); api('addTitle', { name: $('t-new').value }).then(function () { toast('تمت الإضافة', 'ok'); load(); }).catch(function (e) { busy(b, false); toast(e.message, 'err'); }); };
+      el.querySelectorAll('.x').forEach(function (x) { x.onclick = function () { confirmBox('حذف هذا المسمى؟', { danger: true }).then(function (ok) { if (ok) api('deleteTitle', { id: x.dataset.id }).then(function () { toast('تم الحذف', 'ok'); load(); }).catch(function (e) { toast(e.message, 'err'); }); }); }; });
+    }).catch(failBox(el));
+  }
+  load();
+}
+
+/* ----- الدوام ----- */
+function tabSchedule(el) {
+  api('schedule').then(function (s) {
+    var g = s.global;
+    var gHtml = '<div class="card"><h3>الدوام العام <span class="tiny">(يُطبّق على أي فرع ما له دوام خاص)</span></h3><div class="grid4">' +
+      '<div><label>بداية الدوام</label><input type="time" id="g-ws" value="' + esc(g.start) + '"' + (s.canEditGlobal ? '' : ' disabled') + '></div>' +
+      '<div><label>نهاية الدوام</label><input type="time" id="g-we" value="' + esc(g.end) + '"' + (s.canEditGlobal ? '' : ' disabled') + '></div>' +
+      '<div><label>سماح التأخير (د)</label><input type="number" id="g-g" value="' + g.grace + '"' + (s.canEditGlobal ? '' : ' disabled') + '></div>' +
+      '<div><label>سماح الانصراف المبكر (د)</label><input type="number" id="g-eg" value="' + g.egrace + '"' + (s.canEditGlobal ? '' : ' disabled') + '></div></div>' +
+      (s.canEditGlobal ? '<button class="btn sm" id="g-save" style="margin-top:12px">حفظ الدوام العام</button>' : '') + '</div>';
+    var bHtml = s.branches.map(function (b) {
+      var c = b.custom, dis = b.canEdit ? '' : ' disabled';
+      return '<div class="card"><h3>' + esc(b.name) + ' <span class="tiny">الفعلي: ' + esc(b.effective.start) + ' – ' + esc(b.effective.end) + ' · سماح ' + b.effective.grace + ' د</span></h3><div class="grid4">' +
+        '<div><label>بداية الدوام</label><input type="time" data-b="' + b.id + '" data-k="work_start" value="' + esc(c.work_start) + '"' + dis + '></div>' +
+        '<div><label>نهاية الدوام</label><input type="time" data-b="' + b.id + '" data-k="work_end" value="' + esc(c.work_end) + '"' + dis + '></div>' +
+        '<div><label>سماح التأخير (د)</label><input type="number" data-b="' + b.id + '" data-k="grace_minutes" value="' + esc(c.grace_minutes) + '" placeholder="' + g.grace + '"' + dis + '></div>' +
+        '<div><label>سماح الانصراف (د)</label><input type="number" data-b="' + b.id + '" data-k="early_grace_minutes" value="' + esc(c.early_grace_minutes) + '" placeholder="' + g.egrace + '"' + dis + '></div></div>' +
+        '<div class="tiny" style="margin-top:6px">الخانة الفاضية تاخذ قيمة الدوام العام.</div>' +
+        (b.canEdit ? '<button class="btn sm" data-save="' + b.id + '" style="margin-top:10px">حفظ دوام الفرع</button>' : '') + '</div>';
+    }).join('');
+    el.innerHTML = '<div class="info-box" style="margin-bottom:14px">أي تعديل على الدوام ينعكس فورًا على كل السجلات والتقارير والتأخيرات.</div>' + gHtml + bHtml;
+    if ($('g-save')) $('g-save').onclick = function () { var b = this; busy(b, true); api('saveSettings', { work_start: $('g-ws').value, work_end: $('g-we').value, grace_minutes: $('g-g').value, early_grace_minutes: $('g-eg').value }).then(function () { toast('تم الحفظ', 'ok'); tabSchedule(el); }).catch(function (e) { busy(b, false); toast(e.message, 'err'); }); };
+    el.querySelectorAll('[data-save]').forEach(function (btn) {
+      btn.onclick = function () {
+        var id = btn.dataset.save, args = { id: id };
+        el.querySelectorAll('[data-b="' + id + '"]').forEach(function (i) { args[i.dataset.k] = i.value; });
+        busy(btn, true);
+        api('saveBranchSchedule', args).then(function () { toast('تم الحفظ', 'ok'); tabSchedule(el); }).catch(function (e) { busy(btn, false); toast(e.message, 'err'); });
+      };
+    });
+  }).catch(failBox(el));
+}
+
+/* ----- التصدير ----- */
+function tabExport(el) {
+  el.innerHTML = '<div class="card"><h3>تصدير ملف Excel (CSV)</h3><div class="filters"><div><label>من</label><input type="date" id="x-from" value="' + monthStart() + '"></div><div><label>إلى</label><input type="date" id="x-to" value="' + today() + '"></div></div>' +
+    '<div class="btn-row" style="margin-top:14px"><button class="btn" id="x1" style="width:auto"><i class="fa-solid fa-table"></i> السجل اليومي</button><button class="btn blue" id="x2" style="width:auto"><i class="fa-solid fa-list"></i> كل الحركات</button><button class="btn ghost" id="x3" style="width:auto"><i class="fa-solid fa-users"></i> قائمة الموظفين</button></div>' +
+    '<div class="tiny" style="margin-top:10px">الملف يفتح في Excel بالعربي مباشرة. التأخيرات محسوبة على الدوام الحالي.</div></div>';
+  function run(btn, action) { busy(btn, true); api(action, { from: $('x-from').value, to: $('x-to').value, branch_id: S.branch }).then(function (r) { busy(btn, false); downloadCsv(r); }).catch(function (e) { busy(btn, false); toast(e.message, 'err'); }); }
+  $('x1').onclick = function () { run(this, 'exportDaily'); };
+  $('x2').onclick = function () { run(this, 'exportAttendance'); };
+  $('x3').onclick = function () { run(this, 'exportEmployees'); };
+}
+
+/* ----- سجل العمليات ----- */
+function tabAudit(el) {
+  api('audit').then(function (l) {
+    el.innerHTML = '<div class="flex-between" style="margin-bottom:12px"><span class="tiny">آخر ' + l.length + ' عملية</span><button class="btn sm danger" id="au-clear"><i class="fa-solid fa-trash"></i> حذف السجل كاملًا</button></div><div class="card" style="padding:12px">' +
+      (l.length ? '<div class="table-wrap"><table><thead><tr><th>الوقت</th><th>المنفّذ</th><th>العملية</th><th>التفاصيل</th></tr></thead><tbody>' + l.map(function (a) {
+        return '<tr><td class="ltr">' + esc(a.time) + '</td><td>' + esc(a.actor) + '<br><span class="tiny">' + esc(a.role) + '</span></td><td>' + esc(a.action) + '</td><td style="white-space:normal;max-width:320px;font-size:12px;direction:ltr;text-align:left">' + esc(a.details) + '</td></tr>';
+      }).join('') + '</tbody></table></div>' : emptyHtml('fa-shield-halved', 'السجل فاضي')) + '</div>';
+    $('au-clear').onclick = function () { confirmBox('حذف سجل العمليات كاملًا؟', { danger: true, typed: 'حذف' }).then(function (v) { if (v) api('clearAudit').then(function (r) { toast('تم حذف ' + r.deleted, 'ok'); tabAudit(el); }).catch(function (e) { toast(e.message, 'err'); }); }); };
+  }).catch(failBox(el));
+}
+
+/* ----- الإعدادات ----- */
+function tabSettings(el) {
+  api('settings').then(function (s) {
+    el.innerHTML = '<div class="card"><h3>الإعدادات العامة</h3>' +
+      '<div class="grid2"><div><label>اسم المؤسسة</label><input id="s-org" value="' + esc(s.org_name) + '"></div><div><label>المنطقة الزمنية</label><input id="s-tz" class="ltr" value="' + esc(s.timezone) + '"></div></div>' +
+      '<div class="grid2"><div><label>نصف قطر النطاق الافتراضي (م)</label><input id="s-r" type="number" value="' + esc(s.default_radius) + '"></div><div><label>مدة الجلسة (ساعات)</label><input id="s-h" type="number" value="' + esc(s.session_hours) + '"></div></div>' +
+      '<label style="display:flex;gap:8px;align-items:center;font-weight:500"><input type="checkbox" id="s-out"' + (s.allow_outside === '1' ? ' checked' : '') + '> السماح بالبصمة من خارج النطاق (تُسجَّل «خارج النطاق»)</label>' +
+      '<button class="btn" id="s-save" style="margin-top:14px;width:auto">حفظ الإعدادات</button>' +
+      '<div class="divider"></div><a class="btn ghost sm" target="_blank" rel="noopener" href="' + esc(s.sheetUrl) + '"><i class="fa-solid fa-table"></i> فتح قاعدة البيانات (Google Sheet)</a></div>';
+    $('s-save').onclick = function () {
+      var b = this; busy(b, true);
+      api('saveSettings', { org_name: $('s-org').value, timezone: $('s-tz').value, default_radius: $('s-r').value, session_hours: $('s-h').value, allow_outside: $('s-out').checked })
+        .then(function () { toast('تم الحفظ', 'ok'); busy(b, false); lsSet(LS.org, $('s-org').value); }).catch(function (e) { busy(b, false); toast(e.message, 'err'); });
+    };
+  }).catch(failBox(el));
+}
+
+/* =================== البدء =================== */
+(function start() {
+  S.token = lsGet(LS.token);
+  getDeviceId();
+  Promise.all([
+    loadLogo(),
+    api('config').then(function (c) { S.cfg = c; lsSet(LS.org, c.org_name); }).catch(function () {})
+  ]).then(function () {
+    document.title = ((S.cfg && S.cfg.org_name) || 'حضانات هاي ليفيل') + ' — الحضور والانصراف';
+    if (!S.cfg) { $('app').innerHTML = '<div class="center-wrap" style="text-align:center">' + logoHtml('', 120) + '<div class="err-box" style="margin-top:16px">تعذّر الاتصال بالنظام. تأكدي من الإنترنت وحاولي مرة ثانية.</div><button class="btn" style="margin-top:12px" onclick="location.reload()">إعادة المحاولة</button></div>'; return; }
+    route();
+  });
+})();
+</script>
+</body>
+</html>
