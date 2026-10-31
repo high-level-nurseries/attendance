@@ -463,30 +463,32 @@ function mountAccount(el) {
 
 /* =================== لوحة الإدارة =================== */
 var TABS = [
-  { k: 'overview', t: 'نظرة عامة', i: 'fa-chart-pie', r: ['supervisor', 'board', 'manager', 'developer'] },
-  { k: 'mypunch', t: 'بصمتي', i: 'fa-fingerprint', r: ['supervisor', 'manager', 'developer'] },
-  { k: 'attendance', t: 'سجل الحضور', i: 'fa-table-list', r: ['supervisor', 'board', 'manager', 'developer'] },
-  { k: 'employees', t: 'الموظفون', i: 'fa-users', r: ['supervisor', 'board', 'manager', 'developer'] },
-  { k: 'devices', t: 'الأجهزة', i: 'fa-mobile-screen', r: ['supervisor', 'manager', 'developer'] },
-  { k: 'branches', t: 'الفروع', i: 'fa-building', r: ['manager', 'developer'] },
-  { k: 'zones', t: 'النطاقات', i: 'fa-map-location-dot', r: ['developer'] },
-  { k: 'titles', t: 'المسميات', i: 'fa-id-badge', r: ['supervisor', 'manager', 'developer'] },
-  { k: 'schedule', t: 'الدوام والتأخير', i: 'fa-business-time', r: ['supervisor', 'board', 'manager', 'developer'] },
-  { k: 'export', t: 'التصدير', i: 'fa-file-arrow-down', r: ['supervisor', 'board', 'manager', 'developer'] },
-  { k: 'audit', t: 'سجل العمليات', i: 'fa-shield-halved', r: ['developer'] },
-  { k: 'settings', t: 'الإعدادات', i: 'fa-gear', r: ['developer'] },
-  { k: 'account', t: 'حسابي', i: 'fa-user', r: ['supervisor', 'board', 'manager', 'developer'] }
+  { k: 'overview', t: 'نظرة عامة', i: 'fa-chart-pie', c: ['view_overview'] },
+  { k: 'mypunch', t: 'بصمتي', i: 'fa-fingerprint', c: ['punch_self'] },
+  { k: 'attendance', t: 'سجل الحضور', i: 'fa-table-list', c: ['view_attendance'] },
+  { k: 'employees', t: 'الموظفون', i: 'fa-users', c: ['view_employees'] },
+  { k: 'devices', t: 'الأجهزة', i: 'fa-mobile-screen', c: ['view_devices'] },
+  { k: 'branches', t: 'الفروع', i: 'fa-building', c: ['view_branches', 'manage_branches'] },
+  { k: 'zones', t: 'النطاقات', i: 'fa-map-location-dot', c: ['manage_zones'] },
+  { k: 'titles', t: 'المسميات', i: 'fa-id-badge', c: ['view_titles', 'manage_titles'] },
+  { k: 'schedule', t: 'الدوام والتأخير', i: 'fa-business-time', c: ['view_schedule'] },
+  { k: 'export', t: 'التصدير', i: 'fa-file-arrow-down', c: ['export'] },
+  { k: 'corrections', t: 'التصحيحات', i: 'fa-eraser', c: ['developer'] },
+  { k: 'permissions', t: 'الصلاحيات', i: 'fa-user-shield', c: ['developer'] },
+  { k: 'audit', t: 'سجل العمليات', i: 'fa-shield-halved', c: ['developer'] },
+  { k: 'settings', t: 'الإعدادات', i: 'fa-gear', c: ['developer'] },
+  { k: 'account', t: 'حسابي', i: 'fa-user', c: [] }
 ];
-function canEdit() { return ['supervisor', 'manager', 'developer'].indexOf(S.me.role) >= 0; }
-function isDev() { return S.me.role === 'developer'; }
-function allScope() { return ['board', 'manager', 'developer'].indexOf(S.me.role) >= 0; }
+function isDev() { return S.me && S.me.role === 'developer'; }
+function cap(k) { return isDev() || !!(S.admin && S.admin.caps && S.admin.caps[k]); }
+function allScope() { return !!(S.admin && S.admin.scopeAll); }
 
 function renderAdmin() {
   $('app').innerHTML = '<div class="boot">' + logoHtml('', 120) + '<div style="margin-top:14px"><i class="fa-solid fa-circle-notch fa-spin"></i></div></div>';
   api('adminInit').then(function (d) {
     S.admin = d; S.me = d.me;
-    var tabs = TABS.filter(function (t) { return t.r.indexOf(S.me.role) >= 0; });
-    if (!S.tab || !tabs.some(function (t) { return t.k === S.tab; })) S.tab = 'overview';
+    var tabs = TABS.filter(function (t) { return !t.c.length || t.c.some(cap); });
+    if (!S.tab || !tabs.some(function (t) { return t.k === S.tab; })) S.tab = tabs[0].k;
     var branchSel = allScope() && d.branches.length > 1 ? '<select id="branch-pick" style="width:auto;padding:8px 12px;font-size:14px"><option value="">كل الفروع</option>' + d.branches.map(function (b) { return '<option value="' + esc(b.id) + '"' + (S.branch === b.id ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join('') + '</select>' : '';
     var myBranch = !allScope() && d.branches[0] ? d.branches[0].name : 'لوحة الإدارة';
     $('app').innerHTML = topbar(myBranch) + '<div class="wrap"><div class="flex-between" style="margin-bottom:6px"><div class="tabs" id="tabs">' +
@@ -501,7 +503,7 @@ function renderAdmin() {
 function showTab() {
   var el = $('tab-body');
   el.innerHTML = '<div class="loading"><i class="fa-solid fa-circle-notch fa-spin"></i></div>';
-  var fn = { overview: tabOverview, mypunch: function (e) { e.innerHTML = '<div id="mp"></div><div id="mh"></div>'; mountPunch($('mp'), false); mountHistory($('mh')); }, attendance: tabAttendance, employees: tabEmployees, devices: tabDevices, branches: tabBranches, zones: tabZones, titles: tabTitles, schedule: tabSchedule, export: tabExport, audit: tabAudit, settings: tabSettings, account: mountAccount }[S.tab];
+  var fn = { overview: tabOverview, mypunch: function (e) { e.innerHTML = '<div id="mp"></div><div id="mh"></div>'; mountPunch($('mp'), false); mountHistory($('mh')); }, attendance: tabAttendance, corrections: tabCorrections, permissions: tabPermissions, employees: tabEmployees, devices: tabDevices, branches: tabBranches, zones: tabZones, titles: tabTitles, schedule: tabSchedule, export: tabExport, audit: tabAudit, settings: tabSettings, account: mountAccount }[S.tab];
   fn(el);
 }
 function failBox(el) { return function (e) { if (e.code !== 'auth') el.innerHTML = '<div class="err-box">' + esc(e.message) + '</div>'; }; }
@@ -516,19 +518,18 @@ function tabOverview(el) {
       '<div class="stat"><i class="fa-solid fa-users"></i><b>' + s.employees + '</b><span>الموظفات والمشرفات</span></div>' +
       '<div class="stat"><i class="fa-solid fa-user-check" style="color:var(--green)"></i><b>' + s.presentToday + '</b><span>حضروا اليوم</span></div>' +
       '<div class="stat"><i class="fa-solid fa-user-clock" style="color:var(--red)"></i><b>' + s.lateToday + '</b><span>متأخرون اليوم</span></div>' +
-      '<div class="stat' + (s.pendingDevices && canEdit() ? ' click' : '') + '" id="st-pend"><i class="fa-solid fa-mobile-screen" style="color:var(--amber)"></i><b>' + s.pendingDevices + '</b><span>أجهزة بانتظار الموافقة</span></div>' +
+      '<div class="stat' + (s.pendingDevices && cap('view_devices') ? ' click' : '') + '" id="st-pend"><i class="fa-solid fa-mobile-screen" style="color:var(--amber)"></i><b>' + s.pendingDevices + '</b><span>أجهزة بانتظار الموافقة</span></div>' +
       '<div class="stat"><i class="fa-solid fa-building" style="color:var(--blue-d)"></i><b>' + s.branches + '</b><span>الفروع</span></div></div>' +
-      (s.pendingDevices && canEdit() ? '<div class="hint-box" style="margin-bottom:16px"><i class="fa-solid fa-bell"></i> في ' + s.pendingDevices + ' جهاز بانتظار موافقتك. <a href="#" id="go-dev">افتحي الأجهزة</a></div>' : '') +
+      (s.pendingDevices && cap('view_devices') ? '<div class="hint-box" style="margin-bottom:16px"><i class="fa-solid fa-bell"></i> في ' + s.pendingDevices + ' جهاز بانتظار موافقتك. <a href="#" id="go-dev">افتحي الأجهزة</a></div>' : '') +
       '<div class="card"><h3>لم يبصموا دخول اليوم (' + s.absentNames.length + ')</h3>' + (s.absentNames.length ? '<div class="chip-list">' + s.absentNames.map(function (n) { return '<span class="chip">' + esc(n) + '</span>'; }).join('') + '</div>' : (s.employees ? '<div class="ok-box">الكل بصم اليوم ✅</div>' : '<div class="tiny">لا توجد حسابات موظفات بعد</div>')) + '</div>';
     var go = function (e) { if (e) e.preventDefault(); S.tab = 'devices'; renderAdmin(); };
     if ($('go-dev')) $('go-dev').onclick = go;
-    if (s.pendingDevices && canEdit()) $('st-pend').onclick = go;
+    if (s.pendingDevices && cap('view_devices')) $('st-pend').onclick = go;
   }).catch(failBox(el));
 }
 
 /* ----- سجل الحضور ----- */
-var empCache = null;
-function loadEmployeesList() { return api('employees', { branch_id: S.branch }).then(function (l) { empCache = l; return l; }); }
+function loadEmployeesList() { return api('employeeNames', { branch_id: S.branch }); }
 function tabAttendance(el) {
   el.innerHTML = '<div class="card"><div class="filters">' +
     '<div><label>من</label><input type="date" id="a-from" value="' + today() + '"></div>' +
@@ -537,7 +538,7 @@ function tabAttendance(el) {
     '<div><label>النوع</label><select id="a-type"><option value="all">الكل</option><option value="late">المتأخرون</option><option value="early">انصراف مبكر</option><option value="incomplete">غير مكتمل</option><option value="ontime">في الوقت</option></select></div>' +
     '<div><button class="btn" id="a-go"><i class="fa-solid fa-magnifying-glass"></i> عرض</button></div></div>' +
     '<div class="btn-row" style="margin-top:10px"><button class="btn sm ghost" data-r="today">اليوم</button><button class="btn sm ghost" data-r="week">آخر ٧ أيام</button><button class="btn sm ghost" data-r="month">هذا الشهر</button></div></div>' +
-    '<div id="a-res"></div>' + (isDev() ? '<div id="a-dev"></div>' : '');
+    '<div id="a-res"></div>';
   loadEmployeesList().then(function (l) { $('a-emp').innerHTML = '<option value="">الكل</option>' + l.map(function (e) { return '<option value="' + esc(e.id) + '">' + esc(e.name) + '</option>'; }).join(''); }).catch(function () {});
   el.querySelectorAll('[data-r]').forEach(function (b) {
     b.onclick = function () {
@@ -561,7 +562,6 @@ function tabAttendance(el) {
     }).catch(function (e) { busy(b, false); failBox($('a-res'))(e); });
   }
   $('a-go').onclick = load; load();
-  if (isDev()) devAttendanceTools($('a-dev'), load);
 }
 function dayDetail(eid, date, reload) {
   openModal('تفاصيل اليوم', '<div class="loading"><i class="fa-solid fa-circle-notch fa-spin"></i></div>');
@@ -585,48 +585,111 @@ function dayDetail(eid, date, reload) {
     if ($('del-day')) $('del-day').onclick = function () { confirmBox('حذف كل بصمات ' + r.name + ' في ' + fmtDate(r.date) + '؟', { danger: true, yes: 'حذف' }).then(function (ok) { if (!ok) return; api('deleteAttendance', { mode: 'emp_day', employee_id: eid, date: date }).then(function (x) { toast('تم حذف ' + x.deleted + ' بصمة', 'ok'); reload(); }).catch(function (e) { toast(e.message, 'err'); }); }); };
   }).catch(function (e) { $('modal-body').innerHTML = '<div class="err-box">' + esc(e.message) + '</div>'; });
 }
-function devAttendanceTools(el, reload) {
-  el.innerHTML = '<div class="card"><h3><i class="fa-solid fa-screwdriver-wrench" style="color:var(--amber)"></i> أدوات المطوّر</h3>' +
-    '<div class="grid2"><div><label>الموظفة</label><select id="dv-emp"><option value="">— اختر —</option></select></div><div><label>اليوم</label><input type="date" id="dv-day" value="' + today() + '"></div></div>' +
-    '<div class="btn-row" style="margin-top:12px">' +
-    '<button class="btn sm danger" id="dv1"><i class="fa-solid fa-trash"></i> حذف كل بصمات الموظفة</button>' +
-    '<button class="btn sm danger" id="dv2"><i class="fa-solid fa-calendar-xmark"></i> حذف بصمات اليوم (للكل)</button>' +
-    '<button class="btn sm amber" id="dv3"><i class="fa-solid fa-eraser"></i> تصفير تأخيرات الموظفة</button>' +
-    '<button class="btn sm amber" id="dv4"><i class="fa-solid fa-eraser"></i> تصفير كل التأخيرات</button>' +
-    '<button class="btn sm danger" id="dv5"><i class="fa-solid fa-bomb"></i> حذف كل السجل</button></div></div>';
-  (empCache ? Promise.resolve(empCache) : loadEmployeesList()).then(function (l) { $('dv-emp').innerHTML = '<option value="">— اختر —</option>' + l.map(function (e) { return '<option value="' + esc(e.id) + '">' + esc(e.name) + '</option>'; }).join(''); });
-  function emp() { var v = $('dv-emp').value; if (!v) toast('اختر الموظفة', 'err'); return v; }
-  function empName() { var s = $('dv-emp'); return s.options[s.selectedIndex].text; }
-  $('dv1').onclick = function () { var e = emp(); if (!e) return; confirmBox('حذف كل بصمات ' + empName() + ' نهائيًا؟', { danger: true }).then(function (ok) { if (ok) api('deleteAttendance', { mode: 'emp_all', employee_id: e }).then(function (r) { toast('تم حذف ' + r.deleted, 'ok'); reload(); }).catch(function (x) { toast(x.message, 'err'); }); }); };
-  $('dv2').onclick = function () { var d = $('dv-day').value; confirmBox('حذف كل بصمات يوم ' + fmtDate(d) + ' لكل الموظفين؟', { danger: true }).then(function (ok) { if (ok) api('deleteAttendance', { mode: 'day', date: d }).then(function (r) { toast('تم حذف ' + r.deleted, 'ok'); reload(); }).catch(function (x) { toast(x.message, 'err'); }); }); };
-  $('dv3').onclick = function () { var e = emp(); if (!e) return; confirmBox('تصفير كل تأخيرات ' + empName() + '؟').then(function (ok) { if (ok) api('clearLateness', { mode: 'emp', employee_id: e }).then(function (r) { toast('تم تصفير ' + r.cleared, 'ok'); reload(); }).catch(function (x) { toast(x.message, 'err'); }); }); };
-  $('dv4').onclick = function () { confirmBox('تصفير كل التأخيرات لكل الموظفين؟').then(function (ok) { if (ok) api('clearLateness', { mode: 'all' }).then(function (r) { toast('تم تصفير ' + r.cleared, 'ok'); reload(); }).catch(function (x) { toast(x.message, 'err'); }); }); };
-  $('dv5').onclick = function () { confirmBox('حذف كل سجل البصمات نهائيًا لكل الفروع؟ لا يمكن التراجع.', { danger: true, typed: 'حذف الكل', yes: 'حذف الكل' }).then(function (v) { if (v) api('deleteAttendance', { mode: 'all', confirm: v }).then(function (r) { toast('تم حذف ' + r.deleted, 'ok'); reload(); }).catch(function (x) { toast(x.message, 'err'); }); }); };
+/* ----- التصحيحات (المطوّر فقط) ----- */
+function tabCorrections(el) {
+  el.innerHTML = '<div class="info-box" style="margin-bottom:14px"><i class="fa-solid fa-circle-info"></i> هنا تصلّح الأخطاء: تحذف دقائق تأخير بصمة، أو تحذف بصمة غلط، أو تحذف كل بصمات موظفة. كل عملية تنحفظ في سجل العمليات.</div>' +
+    '<div class="card"><div class="filters"><div><label>الموظفة</label><select id="c-emp"><option value="">— اختر —</option></select></div>' +
+    '<div><label>من</label><input type="date" id="c-from" value="' + monthStart() + '"></div><div><label>إلى</label><input type="date" id="c-to" value="' + today() + '"></div>' +
+    '<div><button class="btn" id="c-go"><i class="fa-solid fa-magnifying-glass"></i> عرض البصمات</button></div></div></div>' +
+    '<div id="c-res"></div>' +
+    '<div class="card" style="border:1.5px solid #FECACA"><h3 style="color:#B91C1C"><i class="fa-solid fa-triangle-exclamation"></i> عمليات عامة (لكل الموظفين)</h3>' +
+    '<label>حذف بصمات يوم كامل</label><div class="flex-between" style="flex-wrap:nowrap;max-width:420px"><input type="date" id="c-day" value="' + today() + '"><button class="btn sm danger" id="c-delday">حذف</button></div>' +
+    '<div class="btn-row" style="margin-top:14px"><button class="btn sm amber" id="c-clrall"><i class="fa-solid fa-eraser"></i> حذف كل دقائق التأخير لكل الموظفين</button><button class="btn sm danger" id="c-delall"><i class="fa-solid fa-trash"></i> حذف كل السجل</button></div></div>';
+  api('employeeNames', {}).then(function (l) {
+    $('c-emp').innerHTML = '<option value="">— اختر —</option>' + l.map(function (e) { return '<option value="' + esc(e.id) + '">' + esc(e.name) + '</option>'; }).join('');
+  }).catch(function (e) { toast(e.message, 'err'); });
+  function load() {
+    var eid = $('c-emp').value;
+    if (!eid) { $('c-res').innerHTML = ''; return toast('اختر الموظفة', 'err'); }
+    var b = $('c-go'); busy(b, true);
+    api('punchList', { employee_id: eid, from: $('c-from').value, to: $('c-to').value }).then(function (r) {
+      busy(b, false);
+      var rows = r.punches.map(function (p) {
+        var cls = p.type === 'in' ? (p.late > 0 ? 'late' : 'ontime') : 'out';
+        var mins = p.type === 'in' ? p.rawLate : p.rawEarly;
+        var minTxt = mins > 0 ? (p.cleared ? '<span class="pill grey">' + mins + ' د — محذوفة</span>' : '<span class="pill ' + (p.type === 'in' ? 'no' : 'wait') + '">' + (p.type === 'in' ? 'تأخير ' : 'مبكر ') + mins + ' د</span>') : '<span class="tiny">—</span>';
+        var clearBtn = mins > 0 ? (p.cleared ? '<button class="btn sm ghost" data-r="' + p.id + '" title="إرجاع الدقائق"><i class="fa-solid fa-rotate-left"></i> إرجاع</button>' : '<button class="btn sm amber" data-c="' + p.id + '"><i class="fa-solid fa-eraser"></i> حذف الدقائق</button>') : '';
+        return '<tr><td>' + esc(p.dayName) + '<br><span class="tiny">' + fmtDate(p.date) + '</span></td><td><span class="tm ' + cls + '">' + esc(p.time) + '</span><br><span class="tiny">' + (p.type === 'in' ? 'دخول' : 'انصراف') + '</span></td><td>' + minTxt + '</td><td>' + (p.inside ? '<span class="pill ok">' + esc(p.zone) + '</span>' : '<span class="pill no">خارج (' + p.distance + ' م)</span>') + '</td><td><div class="btn-row">' + clearBtn + '<button class="btn sm danger" data-d="' + p.id + '"><i class="fa-solid fa-trash"></i> حذف البصمة</button></div></td></tr>';
+      }).join('');
+      $('c-res').innerHTML = '<div class="card"><div class="flex-between"><h3 style="margin:0">' + esc(r.name) + '</h3><span class="tiny">' + r.count + ' بصمة في الفترة · ' + r.totalAll + ' بصمة بالمجموع</span></div>' +
+        '<div class="chip-list" style="margin:10px 0"><span class="chip">مجموع التأخير: <b>' + r.lateSum + '</b> د</span><span class="chip">مجموع الانصراف المبكر: <b>' + r.earlySum + '</b> د</span></div>' +
+        '<div class="btn-row" style="margin-bottom:12px"><button class="btn sm amber" id="c-clremp"><i class="fa-solid fa-eraser"></i> حذف كل دقائق تأخير الموظفة</button><button class="btn sm danger" id="c-delemp"><i class="fa-solid fa-trash"></i> حذف كل بصمات الموظفة</button></div>' +
+        (rows ? '<div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>البصمة</th><th>الدقائق</th><th>الموقع</th><th>إجراء</th></tr></thead><tbody>' + rows + '</tbody></table></div>' : emptyHtml('fa-calendar-xmark', 'لا توجد بصمات في هذه الفترة')) + '</div>';
+      $('c-res').querySelectorAll('[data-c]').forEach(function (x) { x.onclick = function () { busy(x, true); api('clearLateness', { mode: 'one', id: x.dataset.c }).then(function () { toast('تم حذف الدقائق', 'ok'); load(); }).catch(function (e) { busy(x, false); toast(e.message, 'err'); }); }; });
+      $('c-res').querySelectorAll('[data-r]').forEach(function (x) { x.onclick = function () { busy(x, true); api('clearLateness', { mode: 'restore_one', id: x.dataset.r }).then(function () { toast('رجعت الدقائق', 'ok'); load(); }).catch(function (e) { busy(x, false); toast(e.message, 'err'); }); }; });
+      $('c-res').querySelectorAll('[data-d]').forEach(function (x) { x.onclick = function () { confirmBox('حذف هذه البصمة نهائيًا؟', { danger: true, yes: 'حذف' }).then(function (ok) { if (ok) api('deleteAttendance', { mode: 'one', id: x.dataset.d }).then(function () { toast('تم حذف البصمة', 'ok'); load(); }).catch(function (e) { toast(e.message, 'err'); }); }); }; });
+      $('c-clremp').onclick = function () { confirmBox('حذف كل دقائق التأخير والانصراف المبكر لـ ' + r.name + ' (كل الفترات)؟').then(function (ok) { if (ok) api('clearLateness', { mode: 'emp', employee_id: eid }).then(function (x) { toast('تم حذف دقائق ' + x.cleared + ' بصمة', 'ok'); load(); }).catch(function (e) { toast(e.message, 'err'); }); }); };
+      $('c-delemp').onclick = function () { confirmBox('حذف كل بصمات ' + r.name + ' نهائيًا (' + r.totalAll + ' بصمة)؟ لا يمكن التراجع.', { danger: true, typed: 'حذف', yes: 'حذف الكل' }).then(function (v) { if (v) api('deleteAttendance', { mode: 'emp_all', employee_id: eid }).then(function (x) { toast('تم حذف ' + x.deleted + ' بصمة', 'ok'); load(); }).catch(function (e) { toast(e.message, 'err'); }); }); };
+    }).catch(function (e) { busy(b, false); $('c-res').innerHTML = '<div class="err-box">' + esc(e.message) + '</div>'; });
+  }
+  $('c-go').onclick = load;
+  $('c-emp').onchange = load;
+  $('c-delday').onclick = function () { var d = $('c-day').value; confirmBox('حذف كل بصمات يوم ' + fmtDate(d) + ' لكل الموظفين؟', { danger: true, typed: 'حذف' }).then(function (v) { if (v) api('deleteAttendance', { mode: 'day', date: d }).then(function (x) { toast('تم حذف ' + x.deleted + ' بصمة', 'ok'); if ($('c-emp').value) load(); }).catch(function (e) { toast(e.message, 'err'); }); }); };
+  $('c-clrall').onclick = function () { confirmBox('حذف كل دقائق التأخير لكل الموظفين في كل الفترات؟', { danger: true, typed: 'حذف' }).then(function (v) { if (v) api('clearLateness', { mode: 'all' }).then(function (x) { toast('تم حذف دقائق ' + x.cleared + ' بصمة', 'ok'); if ($('c-emp').value) load(); }).catch(function (e) { toast(e.message, 'err'); }); }); };
+  $('c-delall').onclick = function () { confirmBox('حذف كل سجل البصمات نهائيًا لكل الفروع؟ لا يمكن التراجع.', { danger: true, typed: 'حذف الكل', yes: 'حذف الكل' }).then(function (v) { if (v) api('deleteAttendance', { mode: 'all', confirm: v }).then(function (x) { toast('تم حذف ' + x.deleted + ' بصمة', 'ok'); $('c-res').innerHTML = ''; }).catch(function (e) { toast(e.message, 'err'); }); }); };
+}
+
+/* ----- الصلاحيات (المطوّر فقط) ----- */
+function tabPermissions(el) {
+  api('permissions').then(function (d) {
+    var vals = JSON.parse(JSON.stringify(d.current));
+    function seeKey(k) { return /^(view_|scope_all|export|punch_self)/.test(k); }
+    function draw() {
+      var groups = [], byG = {};
+      d.perms.forEach(function (p) { if (!byG[p.group]) { byG[p.group] = []; groups.push(p.group); } byG[p.group].push(p); });
+      var cols = d.roles.length + 2;
+      var head = '<thead><tr><th style="white-space:normal">الصلاحية</th>' + d.roles.map(function (r) { return '<th style="text-align:center"><span class="role-chip ' + r.key + '">' + esc(r.label) + '</span></th>'; }).join('') + '<th style="text-align:center"><span class="role-chip developer">المطوّر 🔒</span></th></tr></thead>';
+      var body = groups.map(function (g) {
+        return '<tr><td colspan="' + cols + '" style="background:#F9FAFB;font-weight:800;color:var(--pink-d)">' + esc(g) + '</td></tr>' + byG[g].map(function (p) {
+          return '<tr><td style="white-space:normal;min-width:200px">' + esc(p.label) + '</td>' + d.roles.map(function (r) {
+            return '<td style="text-align:center"><input type="checkbox" style="width:20px;height:20px;accent-color:#EC4899;cursor:pointer" data-r="' + r.key + '" data-k="' + p.key + '"' + (vals[r.key][p.key] ? ' checked' : '') + ' aria-label="' + esc(r.label + ' — ' + p.label) + '"></td>';
+          }).join('') + '<td style="text-align:center;color:#10B981;font-weight:800">✓</td></tr>';
+        }).join('');
+      }).join('') +
+        '<tr><td colspan="' + cols + '" style="background:#FEF2F2;font-weight:800;color:#B91C1C">للمطوّر فقط (مقفلة)</td></tr>' +
+        d.devOnly.map(function (t) { return '<tr><td style="white-space:normal">' + esc(t) + '</td>' + d.roles.map(function () { return '<td style="text-align:center;color:#9CA3AF">🔒</td>'; }).join('') + '<td style="text-align:center;color:#10B981;font-weight:800">✓</td></tr>'; }).join('');
+      var summary = d.roles.map(function (r) {
+        var on = d.perms.filter(function (p) { return vals[r.key][p.key] && p.key !== 'scope_all'; });
+        var see = on.filter(function (p) { return seeKey(p.key); }).map(function (p) { return p.label; });
+        var act = on.filter(function (p) { return !seeKey(p.key); }).map(function (p) { return p.label; });
+        return '<div class="branch-card"><span class="role-chip ' + r.key + '">' + esc(r.label) + '</span> <span class="tiny">' + (vals[r.key].scope_all ? 'كل الفروع' : 'فرعه فقط') + '</span>' +
+          '<div style="margin-top:8px;font-size:13.5px"><b style="color:#0284C7">يشوف:</b> ' + (see.length ? see.map(esc).join('، ') : 'لا شيء') + '</div>' +
+          '<div style="margin-top:4px;font-size:13.5px"><b style="color:#047857">يقدر يضيف ويعدّل:</b> ' + (act.length ? act.map(esc).join('، ') : 'لا شيء') + '</div></div>';
+      }).join('') + '<div class="branch-card"><span class="role-chip">موظفة</span> <span class="tiny">ثابت</span><div style="margin-top:8px;font-size:13.5px">' + d.employee.map(esc).join('، ') + '</div></div>';
+      el.innerHTML = '<div class="info-box" style="margin-bottom:14px"><i class="fa-solid fa-user-shield"></i> حدّد لكل دور وش يشوف ووش يقدر يسوي، واضغط «حفظ الصلاحيات». التغيير ينطبق مباشرة على النظام، ومن كانت فاتحة الصفحة تشوف التغيير لما تحدّثها.</div>' +
+        '<div class="card"><h3>ملخص كل دور</h3>' + summary + '</div>' +
+        '<div class="card" style="padding:12px"><div class="table-wrap"><table>' + head + '<tbody>' + body + '</tbody></table></div>' +
+        '<div class="btn-row" style="margin-top:14px"><button class="btn" id="pm-save" style="width:auto"><i class="fa-solid fa-floppy-disk"></i> حفظ الصلاحيات</button><button class="btn ghost" id="pm-def" style="width:auto"><i class="fa-solid fa-rotate-left"></i> استرجاع الافتراضي</button></div></div>';
+      el.querySelectorAll('input[data-r]').forEach(function (c) { c.onchange = function () { vals[c.dataset.r][c.dataset.k] = c.checked; var y = window.scrollY; draw(); window.scrollTo(0, y); }; });
+      $('pm-def').onclick = function () { vals = JSON.parse(JSON.stringify(d.defaults)); draw(); toast('رجعت القيم الافتراضية — اضغط «حفظ الصلاحيات» لتطبيقها', 'warn'); };
+      $('pm-save').onclick = function () { var b = this; busy(b, true); api('savePermissions', { values: vals }).then(function () { busy(b, false); d.current = JSON.parse(JSON.stringify(vals)); toast('تم حفظ الصلاحيات', 'ok'); }).catch(function (e) { busy(b, false); toast(e.message, 'err'); }); };
+    }
+    draw();
+  }).catch(failBox(el));
 }
 
 /* ----- الموظفون ----- */
 function tabEmployees(el) {
   var showArch = false;
   function load() {
-    el.innerHTML = '<div class="flex-between" style="margin-bottom:12px">' + (canEdit() ? '<button class="btn" id="e-add" style="width:auto"><i class="fa-solid fa-user-plus"></i> إضافة حساب</button>' : '<span></span>') +
+    el.innerHTML = '<div class="flex-between" style="margin-bottom:12px">' + (cap('add_employees') ? '<button class="btn" id="e-add" style="width:auto"><i class="fa-solid fa-user-plus"></i> إضافة حساب</button>' : '<span></span>') +
       (isDev() ? '<label style="display:flex;gap:6px;align-items:center;margin:0;font-weight:500"><input type="checkbox" id="e-arch"' + (showArch ? ' checked' : '') + '> إظهار المحذوفين</label>' : '') + '</div><div id="e-list"><div class="loading"><i class="fa-solid fa-circle-notch fa-spin"></i></div></div>';
     if ($('e-add')) $('e-add').onclick = function () { employeeForm(null, load); };
     if ($('e-arch')) $('e-arch').onchange = function () { showArch = this.checked; load(); };
     api('employees', { branch_id: S.branch, archived: showArch }).then(function (l) {
-      empCache = l;
       if (!l.length) { $('e-list').innerHTML = '<div class="card">' + emptyHtml('fa-users', 'لا توجد حسابات بعد') + '</div>'; return; }
-      $('e-list').innerHTML = '<div class="card" style="padding:12px"><div class="table-wrap"><table><thead><tr><th>الاسم</th><th>الدور</th><th>الفرع</th><th>المسمى</th><th>الجوال</th><th>الأجهزة</th><th>الحالة</th>' + (canEdit() ? '<th>إجراءات</th>' : '') + '</tr></thead><tbody>' +
+      $('e-list').innerHTML = '<div class="card" style="padding:12px"><div class="table-wrap"><table><thead><tr><th>الاسم</th><th>الدور</th><th>الفرع</th><th>المسمى</th><th>الجوال</th><th>الأجهزة</th><th>الحالة</th>' + (empActsCol() ? '<th>إجراءات</th>' : '') + '</tr></thead><tbody>' +
         l.map(function (e) {
           var st = e.archived ? '<span class="pill grey">محذوف</span>' : e.active ? '<span class="pill ok">فعّال</span>' : '<span class="pill no">موقوف</span>';
           var acts = '';
-          if (canEdit() && !e.archived && canManage(e)) {
-            acts = '<div class="btn-row"><button class="btn sm ghost" data-a="edit" data-id="' + e.id + '"><i class="fa-solid fa-pen"></i></button>' +
-              (canPin(e) ? '<button class="btn sm ghost" data-a="pin" data-id="' + e.id + '" title="تغيير الرقم السري"><i class="fa-solid fa-key"></i></button>' : '') +
-              (e.role !== 'developer' || isDev() ? '<button class="btn sm ' + (e.active ? 'ghost' : 'green') + '" data-a="act" data-id="' + e.id + '" title="' + (e.active ? 'إيقاف' : 'تفعيل') + '"><i class="fa-solid ' + (e.active ? 'fa-user-slash' : 'fa-user-check') + '"></i></button>' : '') +
+          if (!e.archived && e.canManage) {
+            acts = '<div class="btn-row">' + (cap('edit_employees') ? '<button class="btn sm ghost" data-a="edit" data-id="' + e.id + '" title="تعديل"><i class="fa-solid fa-pen"></i></button>' : '') +
+              (cap('reset_pins') ? '<button class="btn sm ghost" data-a="pin" data-id="' + e.id + '" title="تغيير الرقم السري"><i class="fa-solid fa-key"></i></button>' : '') +
+              (cap('toggle_employees') && !e.isMe ? '<button class="btn sm ' + (e.active ? 'ghost' : 'green') + '" data-a="act" data-id="' + e.id + '" title="' + (e.active ? 'إيقاف' : 'تفعيل') + '"><i class="fa-solid ' + (e.active ? 'fa-user-slash' : 'fa-user-check') + '"></i></button>' : '') +
               (isDev() ? '<button class="btn sm ghost" data-a="zones" data-id="' + e.id + '" title="نطاقات مخصصة"><i class="fa-solid fa-map-pin"></i></button>' : '') +
               (isDev() && e.role !== 'developer' ? '<button class="btn sm danger" data-a="del" data-id="' + e.id + '" title="حذف"><i class="fa-solid fa-trash"></i></button>' : '') + '</div>';
           } else if (isDev() && e.archived) acts = '<button class="btn sm green" data-a="restore" data-id="' + e.id + '">استرجاع</button>';
-          return '<tr><td><b>' + esc(e.name) + '</b>' + (e.hasCustomZones ? ' <i class="fa-solid fa-map-pin" style="color:var(--pink)" title="نطاقات مخصصة"></i>' : '') + '</td><td><span class="role-chip ' + esc(e.role) + '">' + esc(e.roleAr) + (e.role === 'developer' ? ' 🔒' : '') + '</span></td><td>' + esc(e.branch || '—') + '</td><td>' + esc(e.title || '—') + '</td><td class="ltr">' + esc(e.phone || '') + '</td><td>' + e.devices + (e.pending ? ' <span class="pill wait">+' + e.pending + '</span>' : '') + '</td><td>' + st + '</td>' + (canEdit() ? '<td>' + acts + '</td>' : '') + '</tr>';
+          return '<tr><td><b>' + esc(e.name) + '</b>' + (e.hasCustomZones ? ' <i class="fa-solid fa-map-pin" style="color:var(--pink)" title="نطاقات مخصصة"></i>' : '') + '</td><td><span class="role-chip ' + esc(e.role) + '">' + esc(e.roleAr) + (e.role === 'developer' ? ' 🔒' : '') + '</span></td><td>' + esc(e.branch || '—') + '</td><td>' + esc(e.title || '—') + '</td><td class="ltr">' + esc(e.phone || '') + '</td><td>' + e.devices + (e.pending ? ' <span class="pill wait">+' + e.pending + '</span>' : '') + '</td><td>' + st + '</td>' + (empActsCol() ? '<td>' + acts + '</td>' : '') + '</tr>';
         }).join('') + '</tbody></table></div><div class="tiny" style="margin-top:8px">' + l.length + ' حساب</div></div>';
       $('e-list').querySelectorAll('[data-a]').forEach(function (b) {
         var e = l.filter(function (x) { return x.id === b.dataset.id; })[0];
@@ -644,13 +707,7 @@ function tabEmployees(el) {
   }
   load();
 }
-function canManage(e) {
-  if (isDev()) return true;
-  if (S.me.role === 'manager') return e.role !== 'developer';
-  if (S.me.role === 'supervisor') return e.role === 'employee';
-  return false;
-}
-function canPin(e) { return isDev() || (e.role !== 'developer' && e.role !== 'manager') || e.name === S.me.name; }
+function empActsCol() { return isDev() || cap('edit_employees') || cap('reset_pins') || cap('toggle_employees'); }
 function employeeForm(e, done) {
   var isNew = !e; e = e || { name: '', phone: '', title_id: '', branch_id: S.branch || (S.admin.branches[0] ? S.admin.branches[0].id : ''), role: 'employee' };
   var roles = S.admin.assignable.slice();
@@ -659,7 +716,7 @@ function employeeForm(e, done) {
     '<label>الاسم</label><input id="f-name" value="' + esc(e.name) + '" maxlength="80">' +
     '<div class="grid2"><div><label>الجوال (اختياري)</label><input id="f-phone" class="ltr" inputmode="tel" value="' + esc(e.phone) + '"></div>' +
     '<div><label>المسمى الوظيفي</label><select id="f-title"><option value="">—</option>' + S.admin.titles.map(function (t) { return '<option value="' + esc(t.id) + '"' + (t.id === e.title_id ? ' selected' : '') + '>' + esc(t.name) + '</option>'; }).join('') + '</select></div></div>' +
-    '<div class="grid2">' + (S.me.role !== 'supervisor' ? '<div><label>الفرع</label><select id="f-branch"><option value="">—</option>' + branchOptions(e.branch_id) + '</select></div>' : '') +
+    '<div class="grid2">' + (allScope() ? '<div><label>الفرع</label><select id="f-branch"><option value="">—</option>' + branchOptions(e.branch_id) + '</select></div>' : '') +
     '<div><label>الدور</label><select id="f-role"' + (roles.length < 2 ? ' disabled' : '') + '>' + roles.map(function (r) { return '<option value="' + r.key + '"' + (r.key === e.role ? ' selected' : '') + '>' + esc(r.label) + '</option>'; }).join('') + '</select></div></div>' +
     (isNew ? '<label>الرقم السري (٤ أرقام)</label><input id="f-pin" class="pin-input" type="tel" inputmode="numeric" maxlength="4" autocomplete="off"><div class="tiny">الرقم ما يتكرر بين حسابين. بلّغي الموظفة فيه، وأول جوال تدخل منه ينربط بحسابها.</div>' : '') +
     '<button class="btn" id="f-save" style="margin-top:16px"><i class="fa-solid fa-floppy-disk"></i> حفظ</button>');
@@ -763,13 +820,13 @@ function mountMapPicker(container, init, onChange) {
 function tabBranches(el) {
   function load() {
     api('branches').then(function (l) {
-      el.innerHTML = '<button class="btn" id="b-add" style="width:auto;margin-bottom:12px"><i class="fa-solid fa-plus"></i> إضافة فرع</button><div class="card">' +
+      el.innerHTML = (cap('manage_branches') ? '<button class="btn" id="b-add" style="width:auto;margin-bottom:12px"><i class="fa-solid fa-plus"></i> إضافة فرع</button>' : '') + '<div class="card">' +
         (l.length ? l.map(function (b) {
-          return '<div class="branch-card"><div class="flex-between"><div><b style="font-size:16px">' + esc(b.name) + '</b> ' + (b.active ? '' : '<span class="pill no">غير فعّال</span>') + '<div class="tiny">' + esc(b.address || '') + '</div></div><div class="btn-row"><button class="btn sm ghost" data-a="edit" data-id="' + b.id + '"><i class="fa-solid fa-pen"></i> تعديل</button>' + (isDev() ? '<button class="btn sm danger" data-a="del" data-id="' + b.id + '"><i class="fa-solid fa-trash"></i></button>' : '') + '</div></div>' +
+          return '<div class="branch-card"><div class="flex-between"><div><b style="font-size:16px">' + esc(b.name) + '</b> ' + (b.active ? '' : '<span class="pill no">غير فعّال</span>') + '<div class="tiny">' + esc(b.address || '') + '</div></div><div class="btn-row">' + (cap('manage_branches') ? '<button class="btn sm ghost" data-a="edit" data-id="' + b.id + '"><i class="fa-solid fa-pen"></i> تعديل</button>' : '') + (isDev() ? '<button class="btn sm danger" data-a="del" data-id="' + b.id + '"><i class="fa-solid fa-trash"></i></button>' : '') + '</div></div>' +
             '<div class="chip-list" style="margin-top:8px"><span class="chip"><i class="fa-solid fa-users"></i> ' + b.employees + ' حساب</span><span class="chip"><i class="fa-solid fa-clock"></i> ' + esc(b.schedule.start) + ' – ' + esc(b.schedule.end) + '</span>' +
             (b.zones.length ? b.zones.map(function (z) { return '<span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--pink)"></i> ' + esc(z.name) + ' · ' + esc(z.radius) + ' م' + (z.active ? '' : ' (معطّل)') + '</span>'; }).join('') : '<span class="pill wait">لا يوجد نطاق بصمة</span>') + '</div></div>';
         }).join('') : emptyHtml('fa-building', 'لا توجد فروع بعد')) + '</div>';
-      $('b-add').onclick = function () { branchForm(null, load); };
+      if ($('b-add')) $('b-add').onclick = function () { branchForm(null, load); };
       el.querySelectorAll('[data-a]').forEach(function (x) {
         var b = l.filter(function (y) { return y.id === x.dataset.id; })[0];
         x.onclick = function () {
@@ -784,7 +841,7 @@ function tabBranches(el) {
 function refreshInit(cb) { api('adminInit').then(function (d) { S.admin = d; if (cb) cb(); }).catch(function () { if (cb) cb(); }); }
 function branchForm(b, done) {
   var isNew = !b; b = b || { name: '', address: '', active: true };
-  var zoneSec = isNew && isDev() ? '<div class="divider"></div><b>نطاق البصمة للفرع</b><div class="grid2"><div><label>اسم النطاق</label><input id="bz-name" placeholder="مثلًا: مبنى الحضانة"></div><div><label>المسافة المسموحة (متر)</label><input id="bz-r" type="number" value="150" min="20" max="5000"></div></div><div id="bz-map"></div>' : '';
+  var zoneSec = isNew && cap('manage_zones') ? '<div class="divider"></div><b>نطاق البصمة للفرع</b><div class="grid2"><div><label>اسم النطاق</label><input id="bz-name" placeholder="مثلًا: مبنى الحضانة"></div><div><label>المسافة المسموحة (متر)</label><input id="bz-r" type="number" value="150" min="20" max="5000"></div></div><div id="bz-map"></div>' : '';
   openModal(isNew ? 'إضافة فرع' : 'تعديل ' + b.name,
     '<label>اسم الفرع</label><input id="bf-name" value="' + esc(b.name) + '"><label>العنوان (اختياري)</label><input id="bf-addr" value="' + esc(b.address) + '">' +
     (!isNew ? '<label style="display:flex;gap:8px;align-items:center;font-weight:500"><input type="checkbox" id="bf-act"' + (b.active ? ' checked' : '') + '> الفرع فعّال</label>' : '') +
@@ -849,7 +906,7 @@ function tabTitles(el) {
     api('titles').then(function (l) {
       S.admin.titles = l;
       el.innerHTML = '<div class="card"><h3>المسميات الوظيفية</h3><div class="chip-list">' + (l.length ? l.map(function (t) { return '<span class="chip">' + esc(t.name) + (isDev() ? '<i class="fa-solid fa-xmark x" data-id="' + t.id + '" title="حذف"></i>' : '') + '</span>'; }).join('') : '<span class="tiny">لا توجد مسميات</span>') + '</div>' +
-        (canEdit() ? '<div class="flex-between" style="margin-top:14px;flex-wrap:nowrap"><input id="t-new" placeholder="مسمى جديد، مثلًا: معلمة"><button class="btn" id="t-add" style="width:auto">إضافة</button></div>' : '') + '</div>';
+        (cap('manage_titles') ? '<div class="flex-between" style="margin-top:14px;flex-wrap:nowrap"><input id="t-new" placeholder="مسمى جديد، مثلًا: معلمة"><button class="btn" id="t-add" style="width:auto">إضافة</button></div>' : '') + '</div>';
       if ($('t-add')) $('t-add').onclick = function () { var b = this; busy(b, true); api('addTitle', { name: $('t-new').value }).then(function () { toast('تمت الإضافة', 'ok'); load(); }).catch(function (e) { busy(b, false); toast(e.message, 'err'); }); };
       el.querySelectorAll('.x').forEach(function (x) { x.onclick = function () { confirmBox('حذف هذا المسمى؟', { danger: true }).then(function (ok) { if (ok) api('deleteTitle', { id: x.dataset.id }).then(function () { toast('تم الحذف', 'ok'); load(); }).catch(function (e) { toast(e.message, 'err'); }); }); }; });
     }).catch(failBox(el));
