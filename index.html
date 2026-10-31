@@ -305,7 +305,7 @@ function doLogin() {
     loginBusy = false;
     if (d.pending) {
       busy(btn, false); $('pin').value = '';
-      $('login-msg').innerHTML = '<div class="info-box"><b>أهلًا ' + esc(d.name) + '</b><br>هذا جهاز جديد، وتم إرسال طلب ربطه للمشرفة. بعد ما توافق، ادخلي من جديد من نفس الجوال.</div>';
+      $('login-msg').innerHTML = '<div class="info-box"><b>أهلًا ' + esc(d.name) + '</b><br>هذا جهاز جديد، وتم إرسال طلب ربطه ' + (d.role === 'employee' ? 'للمشرفة' : 'للإدارة') + '. بعد الموافقة، ادخل/ي من جديد من نفس الجهاز.</div>';
       return;
     }
     S.token = d.token; lsSet(LS.token, d.token);
