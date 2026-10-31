@@ -146,7 +146,7 @@ td.ltr{direction:ltr;text-align:left;font-size:12px}
 'use strict';
 /* =================== الإعداد =================== */
 var API_URL = 'https://script.google.com/macros/s/AKfycbzXx5K-YOGN4JVeJKLlJk6w2FDax5CMmdPhFy5Ugk5ZrYWV1xwWlJ9p15iMwVloUl-7-A/exec';
-var LS = { token: 'hl_att_token', device: 'hl_att_device', logo: 'hl_att_logo_v1', org: 'hl_att_org' };
+var LS = { token: 'hl_att_token', device: 'hl_att_device', logo: 'hl_att_logo_v1', org: 'hl_att_org', me: 'hl_att_me' };
 var S = { token: null, me: null, cfg: null, admin: null, tab: null, branch: '', logo: '' };
 var ROLE_AR = { employee: 'موظفة', supervisor: 'مشرفة', board: 'عضو مجلس الإدارة', manager: 'المدير التنفيذي', developer: 'المطوّر' };
 
@@ -245,7 +245,11 @@ function confirmBox(text, opts) {
     };
   });
 }
-function today() { return (S.cfg && S.cfg.today) || new Date().toISOString().slice(0, 10); }
+function kuwaitToday() {
+  try { var p = {}; new Intl.DateTimeFormat('en-GB', { timeZone: (S.cfg && S.cfg.timezone) || 'Asia/Kuwait', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; }); return p.year + '-' + p.month + '-' + p.day; }
+  catch (e) { return new Date(Date.now() + 3 * 3600000).toISOString().slice(0, 10); }
+}
+function today() { return kuwaitToday(); }
 function monthStart() { return today().slice(0, 8) + '01'; }
 function fmtDate(d) { return d ? d.split('-').reverse().join('/') : ''; }
 function emptyHtml(icon, text) { return '<div class="empty"><i class="fa-solid ' + icon + '"></i>' + esc(text) + '</div>'; }
@@ -261,7 +265,7 @@ function downloadCsv(res) {
 }
 
 /* =================== الجلسة =================== */
-function logoutLocal() { S.token = null; S.me = null; S.admin = null; lsDel(LS.token); }
+function logoutLocal() { S.token = null; S.me = null; S.admin = null; lsDel(LS.token); lsDel(LS.me); }
 function doLogout() {
   var t = S.token;
   logoutLocal();
@@ -309,7 +313,7 @@ function doLogin() {
       return;
     }
     S.token = d.token; lsSet(LS.token, d.token);
-    S.me = { name: d.name, role: d.role };
+    S.me = { name: d.name, role: d.role }; lsSet(LS.me, JSON.stringify(S.me));
     route();
   }).catch(function (e) {
     loginBusy = false; busy(btn, false); $('pin').value = '';
@@ -322,7 +326,7 @@ function route() {
   if (!S.token) return renderLanding();
   if (S.me && S.me.role === 'employee') return renderEmployee();
   if (S.me) return renderAdmin();
-  api('me').then(function (me) { S.me = me; route(); }).catch(function (e) { if (e.code !== 'auth') { $('app').innerHTML = '<div class="center-wrap"><div class="err-box">' + esc(e.message) + '</div><button class="btn" style="margin-top:12px" onclick="location.reload()">إعادة المحاولة</button></div>'; } });
+  api('me').then(function (me) { S.me = me; lsSet(LS.me, JSON.stringify({ name: me.name, role: me.role })); route(); }).catch(function (e) { if (e.code !== 'auth') { $('app').innerHTML = '<div class="center-wrap"><div class="err-box">' + esc(e.message) + '</div><button class="btn" style="margin-top:12px" onclick="location.reload()">إعادة المحاولة</button></div>'; } });
 }
 
 function topbar(sub) {
@@ -485,8 +489,8 @@ function allScope() { return !!(S.admin && S.admin.scopeAll); }
 
 function renderAdmin() {
   $('app').innerHTML = '<div class="boot">' + logoHtml('', 120) + '<div style="margin-top:14px"><i class="fa-solid fa-circle-notch fa-spin"></i></div></div>';
-  api('adminInit').then(function (d) {
-    S.admin = d; S.me = d.me;
+  api('adminInit', { branch_id: S.branch }).then(function (d) {
+    S.admin = d; S.me = d.me; lsSet(LS.me, JSON.stringify({ name: d.me.name, role: d.me.role })); S.preStats = d.stats;
     var tabs = TABS.filter(function (t) { return !t.c.length || t.c.some(cap); });
     if (!S.tab || !tabs.some(function (t) { return t.k === S.tab; })) S.tab = tabs[0].k;
     var branchSel = allScope() && d.branches.length > 1 ? '<select id="branch-pick" style="width:auto;padding:8px 12px;font-size:14px"><option value="">كل الفروع</option>' + d.branches.map(function (b) { return '<option value="' + esc(b.id) + '"' + (S.branch === b.id ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join('') + '</select>' : '';
@@ -513,7 +517,8 @@ function branchOptions(sel, withAll) {
 
 /* ----- نظرة عامة ----- */
 function tabOverview(el) {
-  api('stats', { branch_id: S.branch }).then(function (s) {
+  var pre = S.preStats; S.preStats = null;
+  (pre ? Promise.resolve(pre) : api('stats', { branch_id: S.branch })).then(function (s) {
     el.innerHTML = '<div class="stats">' +
       '<div class="stat"><i class="fa-solid fa-users"></i><b>' + s.employees + '</b><span>الموظفات والمشرفات</span></div>' +
       '<div class="stat"><i class="fa-solid fa-user-check" style="color:var(--green)"></i><b>' + s.presentToday + '</b><span>حضروا اليوم</span></div>' +
@@ -989,15 +994,16 @@ function tabSettings(el) {
 /* =================== البدء =================== */
 (function start() {
   S.token = lsGet(LS.token);
+  try { S.me = JSON.parse(lsGet(LS.me) || 'null'); } catch (e) { S.me = null; }
   getDeviceId();
-  Promise.all([
-    loadLogo(),
-    api('config').then(function (c) { S.cfg = c; lsSet(LS.org, c.org_name); }).catch(function () {})
-  ]).then(function () {
-    document.title = ((S.cfg && S.cfg.org_name) || 'حضانات هاي ليفيل') + ' — الحضور والانصراف';
-    if (!S.cfg) { $('app').innerHTML = '<div class="center-wrap" style="text-align:center">' + logoHtml('', 120) + '<div class="err-box" style="margin-top:16px">تعذّر الاتصال بالنظام. تأكدي من الإنترنت وحاولي مرة ثانية.</div><button class="btn" style="margin-top:12px" onclick="location.reload()">إعادة المحاولة</button></div>'; return; }
-    route();
-  });
+  S.logo = lsGet(LS.logo) || '';
+  var org = lsGet(LS.org) || 'حضانات هاي ليفيل';
+  document.title = org + ' — الحضور والانصراف';
+  // الإعدادات والشعار في الخلفية — الصفحة تظهر فورًا
+  var cfgP = api('config').then(function (c) { S.cfg = c; lsSet(LS.org, c.org_name); document.title = c.org_name + ' — الحضور والانصراف'; }).catch(function () {});
+  if (!S.logo) loadLogo();
+  if (!S.token) { renderLanding(); cfgP.then(function () { var h = document.querySelector('.landing h1'); if (h && S.cfg) h.textContent = S.cfg.org_name; }); return; }
+  route();
 })();
 </script>
 </body>
