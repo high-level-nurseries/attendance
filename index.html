@@ -558,11 +558,28 @@ function tabAttendance(el) {
     api('attendanceDaily', { from: $('a-from').value, to: $('a-to').value, employee_id: $('a-emp').value, type: $('a-type').value, branch_id: S.branch }).then(function (r) {
       busy(b, false);
       if (!r.rows.length) { $('a-res').innerHTML = '<div class="card">' + emptyHtml('fa-calendar-xmark', 'لا توجد بصمات بهذه الفلاتر') + '</div>'; return; }
-      var rows = r.rows.map(function (d, i) {
-        var c = dayCells(d);
-        return '<tr><td>' + (i + 1) + '</td><td>' + esc(d.dayName) + '<br><span class="tiny">' + fmtDate(d.date) + '</span></td><td><b>' + esc(d.name) + '</b>' + (allScope() ? '<br><span class="tiny">' + esc(d.branch) + '</span>' : '') + '</td><td>' + c.inC + '</td><td>' + c.outC + '</td><td>' + c.locC + '</td><td>' + c.stC + '</td><td><button class="btn sm ghost" data-e="' + esc(d.employee_id) + '" data-d="' + esc(d.date) + '"><i class="fa-solid fa-eye"></i> تفاصيل</button></td></tr>';
+      // تجميع حسب الفرع: كل فرع في بطاقة مستقلة
+      var groups = {}, order = [];
+      r.rows.forEach(function (d) { var k = d.branch || 'بدون فرع'; if (!groups[k]) { groups[k] = []; order.push(k); } groups[k].push(d); });
+      order.sort(function (x, y) { return x === 'بدون فرع' ? 1 : y === 'بدون فرع' ? -1 : (x < y ? -1 : 1); });
+      var head = '<thead><tr><th>#</th><th>التاريخ</th><th>الموظفة</th><th>الدخول</th><th>الانصراف</th><th>الموقع</th><th>الحالة</th><th></th></tr></thead>';
+      var cards = order.map(function (k) {
+        var list = groups[k];
+        var late = list.filter(function (d) { return d.in && d.in.late > 0; }).length;
+        var inc = list.filter(function (d) { return d.status === 'incomplete'; }).length;
+        var ok = list.filter(function (d) { return d.status === 'ontime'; }).length;
+        var people = {}; list.forEach(function (d) { people[d.employee_id] = 1; });
+        var rows = list.map(function (d, i) {
+          var c = dayCells(d);
+          return '<tr><td>' + (i + 1) + '</td><td>' + esc(d.dayName) + '<br><span class="tiny">' + fmtDate(d.date) + '</span></td><td><b>' + esc(d.name) + '</b></td><td>' + c.inC + '</td><td>' + c.outC + '</td><td>' + c.locC + '</td><td>' + c.stC + '</td><td><button class="btn sm ghost" data-e="' + esc(d.employee_id) + '" data-d="' + esc(d.date) + '"><i class="fa-solid fa-eye"></i> تفاصيل</button></td></tr>';
+        }).join('');
+        return '<div class="card" style="padding:12px"><div class="flex-between" style="margin-bottom:10px;padding:4px 6px">' +
+          '<h3 style="margin:0;font-size:18px;color:var(--pink-d)"><i class="fa-solid fa-building"></i> ' + esc(k) + '</h3>' +
+          '<div class="chip-list"><span class="chip"><i class="fa-solid fa-users"></i> ' + Object.keys(people).length + ' موظفة</span>' +
+          '<span class="pill ok">في الوقت ' + ok + '</span><span class="pill no">متأخر ' + late + '</span><span class="pill grey">غير مكتمل ' + inc + '</span></div></div>' +
+          '<div class="table-wrap"><table class="att-table">' + head + '<tbody>' + rows + '</tbody></table></div></div>';
       }).join('');
-      $('a-res').innerHTML = legendHtml() + '<div class="card" style="padding:12px"><div class="tiny" style="margin-bottom:8px">' + r.total + ' سطر</div><div class="table-wrap"><table class="att-table"><thead><tr><th>#</th><th>التاريخ</th><th>الموظفة</th><th>الدخول</th><th>الانصراف</th><th>الموقع</th><th>الحالة</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+      $('a-res').innerHTML = legendHtml() + '<div class="tiny" style="margin:0 4px 8px">' + r.total + ' سطر · ' + order.length + ' فرع</div>' + cards;
       $('a-res').querySelectorAll('[data-e]').forEach(function (x) { x.onclick = function () { dayDetail(x.dataset.e, x.dataset.d, load); }; });
     }).catch(function (e) { busy(b, false); failBox($('a-res'))(e); });
   }
