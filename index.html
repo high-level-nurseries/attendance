@@ -314,6 +314,7 @@ function doLogin() {
     }
     S.token = d.token; lsSet(LS.token, d.token);
     S.me = { name: d.name, role: d.role }; lsSet(LS.me, JSON.stringify(S.me));
+    S.init = d.init || null;
     route();
   }).catch(function (e) {
     loginBusy = false; busy(btn, false); $('pin').value = '';
@@ -412,7 +413,8 @@ function mountPunch(el, greet) {
       if (e.code === 'outside_zone') check();
     });
   }
-  api('summary').then(function (s) { st.sum = s; st.allow = s.allowOutside; draw(); check(); })
+  var ini = S.init && S.init.todayPunches ? S.init : null; S.init = null;
+  (ini ? Promise.resolve(ini) : api('summary')).then(function (s) { st.sum = s; st.allow = s.allowOutside; draw(); check(); })
     .catch(function (e) { el.innerHTML = '<div class="err-box">' + esc(e.message) + '</div>'; });
 }
 
@@ -489,7 +491,8 @@ function allScope() { return !!(S.admin && S.admin.scopeAll); }
 
 function renderAdmin() {
   $('app').innerHTML = '<div class="boot">' + logoHtml('', 120) + '<div style="margin-top:14px"><i class="fa-solid fa-circle-notch fa-spin"></i></div></div>';
-  api('adminInit', { branch_id: S.branch }).then(function (d) {
+  var ini = S.init && S.init.me ? S.init : null; S.init = null;
+  (ini ? Promise.resolve(ini) : api('adminInit', { branch_id: S.branch })).then(function (d) {
     S.admin = d; S.me = d.me; lsSet(LS.me, JSON.stringify({ name: d.me.name, role: d.me.role })); S.preStats = d.stats;
     var tabs = TABS.filter(function (t) { return !t.c.length || t.c.some(cap); });
     if (!S.tab || !tabs.some(function (t) { return t.k === S.tab; })) S.tab = tabs[0].k;
