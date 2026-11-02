@@ -169,15 +169,37 @@ function toast(msg, kind) {
   setTimeout(function () { t.style.opacity = '0'; t.style.transition = '.3s'; }, 4200);
   setTimeout(function () { t.remove(); }, 4600);
 }
+function cookieGet(k) { try { var m = document.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : null; } catch (e) { return null; } }
+function cookieSet(k, v) { try { document.cookie = k + '=' + encodeURIComponent(v) + '; max-age=34560000; path=/; SameSite=Lax; Secure'; } catch (e) {} }
+/** معرّف الجهاز: يُحفظ في localStorage والكوكيز معًا حتى لا يضيع بسهولة. */
 function getDeviceId() {
+  var ok = function (x) { return x && /^[A-Za-z0-9_-]{16,64}$/.test(x); };
   var d = lsGet(LS.device);
-  if (!d || !/^[A-Za-z0-9_-]{16,64}$/.test(d)) {
+  if (!ok(d)) d = cookieGet('hl_dev');
+  if (!ok(d)) {
     var a = new Uint8Array(18);
     (window.crypto || window.msCrypto).getRandomValues(a);
     d = Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
-    lsSet(LS.device, d);
   }
+  lsSet(LS.device, d); cookieSet('hl_dev', d);
   return d;
+}
+/** بصمة الجهاز (خصائص ثابتة للجوال) — تتعرّف على نفس الجوال لو مسح المتصفح ذاكرته (التصفح الخاص). */
+var fpPromise = null;
+function getFingerprint() {
+  if (fpPromise) return fpPromise;
+  var parts = [navigator.userAgent, screen.width + 'x' + screen.height, window.devicePixelRatio, screen.colorDepth,
+    (Intl.DateTimeFormat().resolvedOptions().timeZone || ''), navigator.language, (navigator.languages || []).join(','),
+    navigator.hardwareConcurrency || '', navigator.maxTouchPoints || 0, navigator.platform || ''];
+  try {
+    var c = document.createElement('canvas'), gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+    if (gl) { var ext = gl.getExtension('WEBGL_debug_renderer_info'); parts.push(ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER)); }
+  } catch (e) {}
+  var txt = parts.join('|');
+  fpPromise = (window.crypto && crypto.subtle ? crypto.subtle.digest('SHA-256', new TextEncoder().encode(txt)).then(function (b) {
+    return Array.prototype.map.call(new Uint8Array(b), function (x) { return ('0' + x.toString(16)).slice(-2); }).join('');
+  }) : Promise.resolve('')).catch(function () { return ''; });
+  return fpPromise;
 }
 /** ASCII فقط في الطلب حتى لا يتغير ترميز العربي. */
 function asciiJson(v) { return JSON.stringify(v).replace(/[\u007f-￿]/g, function (c) { return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4); }); }
@@ -305,7 +327,9 @@ function doLogin() {
   if (pin.length !== 4) { $('login-msg').innerHTML = '<div class="hint-box">الرقم السري ٤ أرقام</div>'; return; }
   loginBusy = true;
   var btn = $('login-btn'); busy(btn, true, 'جارٍ الدخول…');
-  api('login', { pin: pin, deviceId: getDeviceId(), ua: navigator.userAgent }).then(function (d) {
+  getFingerprint().then(function (fp) {
+    return api('login', { pin: pin, deviceId: getDeviceId(), ua: navigator.userAgent, fp: fp });
+  }).then(function (d) {
     loginBusy = false;
     if (d.pending) {
       busy(btn, false); $('pin').value = '';
@@ -1015,7 +1039,7 @@ function tabSettings(el) {
 (function start() {
   S.token = lsGet(LS.token);
   try { S.me = JSON.parse(lsGet(LS.me) || 'null'); } catch (e) { S.me = null; }
-  getDeviceId();
+  getDeviceId(); getFingerprint();
   S.logo = lsGet(LS.logo) || '';
   var org = lsGet(LS.org) || 'حضانات هاي ليفيل';
   document.title = org + ' — الحضور والانصراف';
