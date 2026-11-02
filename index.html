@@ -444,12 +444,13 @@ function mountPunch(el, greet) {
 
 function dayCells(d) {
   var inC, outC;
-  if (d.in) inC = '<span class="tm ' + (d.in.late > 0 ? 'late' : 'ontime') + '">' + esc(d.in.time) + '</span>' + (d.in.late > 0 ? '<span class="sub-note r">متأخر ' + d.in.late + ' د</span>' : '') + (d.inCount > 1 ? '<span class="tiny"> (' + d.inCount + ')</span>' : '');
+  var man = '<span class="sub-note" style="color:#6B7280"><i class="fa-solid fa-pen-to-square"></i> يدوي</span>';
+  if (d.in) inC = '<span class="tm ' + (d.in.late > 0 ? 'late' : 'ontime') + '">' + esc(d.in.time) + '</span>' + (d.in.manual ? man : '') + (d.in.late > 0 ? '<span class="sub-note r">متأخر ' + d.in.late + ' د</span>' : '') + (d.inCount > 1 ? '<span class="tiny"> (' + d.inCount + ')</span>' : '');
   else inC = '<span class="tm no">— لم يبصم</span>';
-  if (d.out) outC = '<span class="tm out">' + esc(d.out.time) + '</span>' + (d.out.early > 0 ? '<span class="sub-note o">مبكر ' + d.out.early + ' د</span>' : '') + (d.outCount > 1 ? '<span class="tiny"> (' + d.outCount + ')</span>' : '');
+  if (d.out) outC = '<span class="tm out">' + esc(d.out.time) + '</span>' + (d.out.manual ? man : '') + (d.out.early > 0 ? '<span class="sub-note o">مبكر ' + d.out.early + ' د</span>' : '') + (d.outCount > 1 ? '<span class="tiny"> (' + d.outCount + ')</span>' : '');
   else outC = '<span class="tm no">— لم يبصم</span>';
   var p = d.in || d.out;
-  var locC = p ? (p.inside ? '<span class="pill ok"><i class="fa-solid fa-location-dot"></i> ' + esc(p.zone) + '</span>' : '<span class="pill no">خارج النطاق (' + p.distance + ' م)</span>') : '—';
+  var locC = p && p.manual ? '<span class="pill grey">إدخال يدوي</span>' : p ? (p.inside ? '<span class="pill ok"><i class="fa-solid fa-location-dot"></i> ' + esc(p.zone) + '</span>' : '<span class="pill no">خارج النطاق (' + p.distance + ' م)</span>') : '—';
   var stC = d.status === 'ontime' ? '<span class="pill ok">مكتمل في الوقت</span>' : d.status === 'late' ? '<span class="pill no">متأخر ' + d.in.late + ' د</span>' : d.status === 'early' ? '<span class="pill wait">انصراف مبكر ' + d.out.early + ' د</span>' : '<span class="pill grey">غير مكتمل</span>';
   return { inC: inC, outC: outC, locC: locC, stC: stC };
 }
@@ -658,7 +659,7 @@ function tabCorrections(el) {
         var mins = p.type === 'in' ? p.rawLate : p.rawEarly;
         var minTxt = mins > 0 ? (p.cleared ? '<span class="pill grey">' + mins + ' د — محذوفة</span>' : '<span class="pill ' + (p.type === 'in' ? 'no' : 'wait') + '">' + (p.type === 'in' ? 'تأخير ' : 'مبكر ') + mins + ' د</span>') : '<span class="tiny">—</span>';
         var clearBtn = mins > 0 ? (p.cleared ? '<button class="btn sm ghost" data-r="' + p.id + '" title="إرجاع الدقائق"><i class="fa-solid fa-rotate-left"></i> إرجاع</button>' : '<button class="btn sm amber" data-c="' + p.id + '"><i class="fa-solid fa-eraser"></i> حذف الدقائق</button>') : '';
-        return '<tr><td>' + esc(p.dayName) + '<br><span class="tiny">' + fmtDate(p.date) + '</span></td><td><span class="tm ' + cls + '">' + esc(p.time) + '</span><br><span class="tiny">' + (p.type === 'in' ? 'دخول' : 'انصراف') + '</span></td><td>' + minTxt + '</td><td>' + (p.inside ? '<span class="pill ok">' + esc(p.zone) + '</span>' : '<span class="pill no">خارج (' + p.distance + ' م)</span>') + '</td><td><div class="btn-row">' + clearBtn + '<button class="btn sm danger" data-d="' + p.id + '"><i class="fa-solid fa-trash"></i> حذف البصمة</button></div></td></tr>';
+        return '<tr><td>' + esc(p.dayName) + '<br><span class="tiny">' + fmtDate(p.date) + '</span></td><td><span class="tm ' + cls + '">' + esc(p.time) + '</span><br><span class="tiny">' + (p.type === 'in' ? 'دخول' : 'انصراف') + (p.manual ? ' · يدوي' : '') + '</span></td><td>' + minTxt + '</td><td>' + (p.inside ? '<span class="pill ok">' + esc(p.zone) + '</span>' : '<span class="pill no">خارج (' + p.distance + ' م)</span>') + '</td><td><div class="btn-row">' + clearBtn + '<button class="btn sm danger" data-d="' + p.id + '"><i class="fa-solid fa-trash"></i> حذف البصمة</button></div></td></tr>';
       }).join('');
       $('c-res').innerHTML = '<div class="card"><div class="flex-between"><h3 style="margin:0">' + esc(r.name) + '</h3><span class="tiny">' + r.count + ' بصمة في الفترة · ' + r.totalAll + ' بصمة بالمجموع</span></div>' +
         '<div class="chip-list" style="margin:10px 0"><span class="chip">مجموع التأخير: <b>' + r.lateSum + '</b> د</span><span class="chip">مجموع الانصراف المبكر: <b>' + r.earlySum + '</b> د</span></div>' +
@@ -736,6 +737,7 @@ function tabEmployees(el) {
               (cap('reset_pins') ? '<button class="btn sm ghost" data-a="pin" data-id="' + e.id + '" title="تغيير الرقم السري"><i class="fa-solid fa-key"></i></button>' : '') +
               (cap('toggle_employees') && !e.isMe ? '<button class="btn sm ' + (e.active ? 'ghost' : 'green') + '" data-a="act" data-id="' + e.id + '" title="' + (e.active ? 'إيقاف' : 'تفعيل') + '"><i class="fa-solid ' + (e.active ? 'fa-user-slash' : 'fa-user-check') + '"></i></button>' : '') +
               (isDev() ? '<button class="btn sm ghost" data-a="zones" data-id="' + e.id + '" title="نطاقات مخصصة"><i class="fa-solid fa-map-pin"></i></button>' : '') +
+              (isDev() && e.role !== 'developer' ? '<button class="btn sm blue" data-a="backfill" data-id="' + e.id + '" title="إدخال حضور سابق"><i class="fa-solid fa-calendar-plus"></i></button>' : '') +
               (isDev() && e.role !== 'developer' ? '<button class="btn sm danger" data-a="del" data-id="' + e.id + '" title="حذف"><i class="fa-solid fa-trash"></i></button>' : '') + '</div>';
           } else if (isDev() && e.archived) acts = '<button class="btn sm green" data-a="restore" data-id="' + e.id + '">استرجاع</button>';
           return '<tr><td><b>' + esc(e.name) + '</b>' + (e.hasCustomZones ? ' <i class="fa-solid fa-map-pin" style="color:var(--pink)" title="نطاقات مخصصة"></i>' : '') + '</td><td><span class="role-chip ' + esc(e.role) + '">' + esc(e.roleAr) + (e.role === 'developer' ? ' 🔒' : '') + '</span></td><td>' + esc(e.branch || '—') + '</td><td>' + esc(e.title || '—') + '</td><td class="ltr">' + esc(e.phone || '') + '</td><td>' + e.devices + (e.pending ? ' <span class="pill wait">+' + e.pending + '</span>' : '') + '</td><td>' + st + '</td>' + (empActsCol() ? '<td>' + acts + '</td>' : '') + '</tr>';
@@ -747,6 +749,7 @@ function tabEmployees(el) {
           if (a === 'edit') employeeForm(e, load);
           else if (a === 'pin') pinForm(e);
           else if (a === 'zones') employeeZonesForm(e, load);
+          else if (a === 'backfill') backfillForm(e);
           else if (a === 'act') confirmBox((e.active ? 'إيقاف حساب ' : 'تفعيل حساب ') + e.name + '؟', { danger: e.active }).then(function (ok) { if (ok) api('setEmployeeActive', { id: e.id, active: !e.active }).then(function () { toast('تم', 'ok'); load(); }).catch(function (x) { toast(x.message, 'err'); }); });
           else if (a === 'del') confirmBox('حذف حساب ' + e.name + '؟ الحساب ينقفل ويختفي من القوائم، وبصماته وسجله تبقى محفوظة.', { danger: true, yes: 'حذف' }).then(function (ok) { if (ok) api('archiveEmployee', { id: e.id }).then(function () { toast('تم الحذف', 'ok'); load(); }).catch(function (x) { toast(x.message, 'err'); }); });
           else if (a === 'restore') api('archiveEmployee', { id: e.id, restore: true }).then(function () { toast('تم الاسترجاع', 'ok'); load(); }).catch(function (x) { toast(x.message, 'err'); });
@@ -801,6 +804,41 @@ function employeeZonesForm(e, done) {
   }).catch(function (x) { $('modal-body').innerHTML = '<div class="err-box">' + esc(x.message) + '</div>'; });
 }
 
+
+/** إدخال حضور سابق (للمطوّر): دخول وانصراف يومي ضمن الدوام بدون تأخير، مُعلَّم «يدوي». */
+function backfillForm(e) {
+  var y = new Date(today() + 'T00:00:00Z'); y.setUTCDate(y.getUTCDate() - 1);
+  var yest = y.toISOString().slice(0, 10);
+  var names = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  openModal('إدخال حضور سابق — ' + e.name,
+    '<div class="info-box" style="margin-bottom:10px">النظام يضيف لكل يوم دوام دخول وانصراف بأوقات طبيعية متفاوتة داخل وقت السماح (بدون تأخير ولا انصراف مبكر) حسب دوام فرعها. الأيام اللي فيها بصمات ما يلمسها. وكل هالبصمات تنعلّم «إدخال يدوي» في السجل والتصدير.</div>' +
+    '<div class="grid2"><div><label>من</label><input type="date" id="bf-from" value="' + monthStart() + '" max="' + yest + '"></div><div><label>إلى</label><input type="date" id="bf-to" value="' + yest + '" max="' + yest + '"></div></div>' +
+    '<label>أيام الدوام</label><div class="chip-list">' + names.map(function (n, i) { return '<label class="chip" style="display:inline-flex;gap:6px;align-items:center;margin:0;font-weight:500"><input type="checkbox" class="bf-day" value="' + i + '"' + (i <= 4 ? ' checked' : '') + '> ' + n + '</label>'; }).join('') + '</div>' +
+    '<div id="bf-prev" style="margin-top:12px"></div>' +
+    '<div class="btn-row" style="margin-top:14px"><button class="btn ghost" id="bf-check" style="width:auto"><i class="fa-solid fa-eye"></i> معاينة</button><button class="btn" id="bf-go" style="width:auto" disabled><i class="fa-solid fa-calendar-plus"></i> إدخال</button></div>' +
+    '<div class="divider"></div><button class="btn sm danger" id="bf-del"><i class="fa-solid fa-trash"></i> حذف كل الإدخالات اليدوية لهذه الموظفة</button>');
+  function args() { return { employee_id: e.id, from: $('bf-from').value, to: $('bf-to').value, days: Array.prototype.map.call(document.querySelectorAll('.bf-day:checked'), function (c) { return Number(c.value); }) }; }
+  function reset() { $('bf-go').disabled = true; $('bf-prev').innerHTML = ''; }
+  ['bf-from', 'bf-to'].forEach(function (id) { $(id).onchange = reset; });
+  document.querySelectorAll('.bf-day').forEach(function (c) { c.onchange = reset; });
+  $('bf-check').onclick = function () {
+    var b = this; busy(b, true);
+    api('backfillPreview', args()).then(function (r) {
+      busy(b, false);
+      $('bf-prev').innerHTML = r.days ? '<div class="ok-box">بيضاف <b>' + r.days + '</b> يوم (من ' + fmtDate(r.first) + ' إلى ' + fmtDate(r.last) + ')، دخول حول ' + esc(r.start) + ' وانصراف بعد ' + esc(r.end) + '.' + (r.skipped ? '<br>بيتخطّى ' + r.skipped + ' يوم فيه بصمات من قبل.' : '') + '</div>' : '<div class="hint-box">ما في أيام تنضاف' + (r.skipped ? ' (كل الأيام فيها بصمات)' : '') + '.</div>';
+      $('bf-go').disabled = !r.days;
+    }).catch(function (x) { busy(b, false); $('bf-prev').innerHTML = '<div class="err-box">' + esc(x.message) + '</div>'; });
+  };
+  $('bf-go').onclick = function () {
+    var b = this; busy(b, true, 'جارٍ الإدخال…');
+    api('backfillAttendance', args()).then(function (r) { closeModal(); toast('تم إدخال ' + r.days + ' يوم (' + r.added + ' بصمة)', 'ok'); }).catch(function (x) { busy(b, false); toast(x.message, 'err'); });
+  };
+  $('bf-del').onclick = function () {
+    confirmBox('حذف كل الإدخالات اليدوية لـ ' + e.name + '؟ بصمات الجوال ما تنحذف.', { danger: true, yes: 'حذف' }).then(function (ok) {
+      if (ok) api('deleteAttendance', { mode: 'emp_manual', employee_id: e.id }).then(function (r) { toast('تم حذف ' + r.deleted + ' بصمة يدوية', 'ok'); }).catch(function (x) { toast(x.message, 'err'); });
+    });
+  };
+}
 /* ----- الأجهزة ----- */
 function tabDevices(el) {
   var status = 'pending';
