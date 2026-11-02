@@ -86,6 +86,7 @@ td.ltr{direction:ltr;text-align:left;font-size:12px}
 .pill.wait{background:rgba(245,158,11,.15);color:#B45309}
 .pill.info{background:rgba(56,189,248,.15);color:#0284C7}
 .pill.grey{background:#F3F4F6;color:#6B7280}
+.absent-row td{background:#FFF7F7}
 .att-table td{padding:11px 12px}
 .tm{display:inline-block;padding:4px 12px;border-radius:10px;font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;direction:ltr;letter-spacing:.5px}
 .tm.ontime{background:rgba(16,185,129,.16);color:#047857;box-shadow:inset 0 0 0 1.5px rgba(16,185,129,.35)}
@@ -451,7 +452,7 @@ function dayCells(d) {
   else outC = '<span class="tm no">— لم يبصم</span>';
   var p = d.in || d.out;
   var locC = p && p.manual ? '<span class="pill grey">إدخال يدوي</span>' : p ? (p.inside ? '<span class="pill ok"><i class="fa-solid fa-location-dot"></i> ' + esc(p.zone) + '</span>' : '<span class="pill no">خارج النطاق (' + p.distance + ' م)</span>') : '—';
-  var stC = d.status === 'ontime' ? '<span class="pill ok">مكتمل في الوقت</span>' : d.status === 'late' ? '<span class="pill no">متأخر ' + d.in.late + ' د</span>' : d.status === 'early' ? '<span class="pill wait">انصراف مبكر ' + d.out.early + ' د</span>' : '<span class="pill grey">غير مكتمل</span>';
+  var stC = d.status === 'ontime' ? '<span class="pill ok">مكتمل في الوقت</span>' : d.status === 'late' ? '<span class="pill no">متأخر ' + d.in.late + ' د</span>' : d.status === 'early' ? '<span class="pill wait">انصراف مبكر ' + d.out.early + ' د</span>' : d.status === 'absent' ? '<span class="pill no"><i class="fa-solid fa-user-xmark"></i> لم يبصم</span>' : '<span class="pill grey">غير مكتمل</span>';
   return { inC: inC, outC: outC, locC: locC, stC: stC };
 }
 function legendHtml() {
@@ -568,7 +569,7 @@ function tabAttendance(el) {
     '<div><label>من</label><input type="date" id="a-from" value="' + today() + '"></div>' +
     '<div><label>إلى</label><input type="date" id="a-to" value="' + today() + '"></div>' +
     '<div><label>الموظفة</label><select id="a-emp"><option value="">الكل</option></select></div>' +
-    '<div><label>النوع</label><select id="a-type"><option value="all">الكل</option><option value="late">المتأخرون</option><option value="early">انصراف مبكر</option><option value="incomplete">غير مكتمل</option><option value="ontime">في الوقت</option></select></div>' +
+    '<div><label>النوع</label><select id="a-type"><option value="all">الكل</option><option value="late">المتأخرون</option><option value="early">انصراف مبكر</option><option value="incomplete">غير مكتمل</option><option value="absent">لم يبصم</option><option value="ontime">في الوقت</option></select></div>' +
     '<div><button class="btn" id="a-go"><i class="fa-solid fa-magnifying-glass"></i> عرض</button></div></div>' +
     '<div class="btn-row" style="margin-top:10px"><button class="btn sm ghost" data-r="today">اليوم</button><button class="btn sm ghost" data-r="week">آخر ٧ أيام</button><button class="btn sm ghost" data-r="month">هذا الشهر</button></div></div>' +
     '<div id="a-res"></div>';
@@ -585,7 +586,7 @@ function tabAttendance(el) {
     var b = $('a-go'); busy(b, true);
     api('attendanceDaily', { from: $('a-from').value, to: $('a-to').value, employee_id: $('a-emp').value, type: $('a-type').value, branch_id: S.branch }).then(function (r) {
       busy(b, false);
-      if (!r.rows.length) { $('a-res').innerHTML = '<div class="card">' + emptyHtml('fa-calendar-xmark', 'لا توجد بصمات بهذه الفلاتر') + '</div>'; return; }
+      if (!r.rows.length) { $('a-res').innerHTML = '<div class="card">' + emptyHtml('fa-calendar-xmark', 'لا توجد سجلات بهذه الفلاتر') + '</div>'; return; }
       // تجميع حسب الفرع: كل فرع في بطاقة مستقلة
       var groups = {}, order = [];
       r.rows.forEach(function (d) { var k = d.branch || 'بدون فرع'; if (!groups[k]) { groups[k] = []; order.push(k); } groups[k].push(d); });
@@ -596,15 +597,16 @@ function tabAttendance(el) {
         var late = list.filter(function (d) { return d.in && d.in.late > 0; }).length;
         var inc = list.filter(function (d) { return d.status === 'incomplete'; }).length;
         var ok = list.filter(function (d) { return d.status === 'ontime'; }).length;
+        var abs = list.filter(function (d) { return d.status === 'absent'; }).length;
         var people = {}; list.forEach(function (d) { people[d.employee_id] = 1; });
         var rows = list.map(function (d, i) {
           var c = dayCells(d);
-          return '<tr><td>' + (i + 1) + '</td><td>' + esc(d.dayName) + '<br><span class="tiny">' + fmtDate(d.date) + '</span></td><td><b>' + esc(d.name) + '</b></td><td>' + c.inC + '</td><td>' + c.outC + '</td><td>' + c.locC + '</td><td>' + c.stC + '</td><td><button class="btn sm ghost" data-e="' + esc(d.employee_id) + '" data-d="' + esc(d.date) + '"><i class="fa-solid fa-eye"></i> تفاصيل</button></td></tr>';
+          return '<tr' + (d.status === 'absent' ? ' class="absent-row"' : '') + '><td>' + (i + 1) + '</td><td>' + esc(d.dayName) + '<br><span class="tiny">' + fmtDate(d.date) + '</span></td><td><b>' + esc(d.name) + '</b></td><td>' + c.inC + '</td><td>' + c.outC + '</td><td>' + c.locC + '</td><td>' + c.stC + '</td><td>' + (d.status === 'absent' ? '' : '<button class="btn sm ghost" data-e="' + esc(d.employee_id) + '" data-d="' + esc(d.date) + '"><i class="fa-solid fa-eye"></i> تفاصيل</button>') + '</td></tr>';
         }).join('');
         return '<div class="card" style="padding:12px"><div class="flex-between" style="margin-bottom:10px;padding:4px 6px">' +
           '<h3 style="margin:0;font-size:18px;color:var(--pink-d)"><i class="fa-solid fa-building"></i> ' + esc(k) + '</h3>' +
           '<div class="chip-list"><span class="chip"><i class="fa-solid fa-users"></i> ' + Object.keys(people).length + ' موظفة</span>' +
-          '<span class="pill ok">في الوقت ' + ok + '</span><span class="pill no">متأخر ' + late + '</span><span class="pill grey">غير مكتمل ' + inc + '</span></div></div>' +
+          '<span class="pill ok">في الوقت ' + ok + '</span><span class="pill no">متأخر ' + late + '</span><span class="pill grey">غير مكتمل ' + inc + '</span><span class="pill no" style="background:#FEE2E2"><i class="fa-solid fa-user-xmark"></i> لم يبصم ' + abs + '</span></div></div>' +
           '<div class="table-wrap"><table class="att-table">' + head + '<tbody>' + rows + '</tbody></table></div></div>';
       }).join('');
       $('a-res').innerHTML = legendHtml() + '<div class="tiny" style="margin:0 4px 8px">' + r.total + ' سطر · ' + order.length + ' فرع</div>' + cards;
