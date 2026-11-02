@@ -736,11 +736,12 @@ function tabEmployees(el) {
             acts = '<div class="btn-row">' + (cap('edit_employees') ? '<button class="btn sm ghost" data-a="edit" data-id="' + e.id + '" title="تعديل"><i class="fa-solid fa-pen"></i></button>' : '') +
               (cap('reset_pins') ? '<button class="btn sm ghost" data-a="pin" data-id="' + e.id + '" title="تغيير الرقم السري"><i class="fa-solid fa-key"></i></button>' : '') +
               (cap('toggle_employees') && !e.isMe ? '<button class="btn sm ' + (e.active ? 'ghost' : 'green') + '" data-a="act" data-id="' + e.id + '" title="' + (e.active ? 'إيقاف' : 'تفعيل') + '"><i class="fa-solid ' + (e.active ? 'fa-user-slash' : 'fa-user-check') + '"></i></button>' : '') +
+              (cap('edit_schedule') ? '<button class="btn sm ghost" data-a="sched" data-id="' + e.id + '" title="دوام خاص"><i class="fa-solid fa-clock"></i></button>' : '') +
               (isDev() ? '<button class="btn sm ghost" data-a="zones" data-id="' + e.id + '" title="نطاقات مخصصة"><i class="fa-solid fa-map-pin"></i></button>' : '') +
               (isDev() && e.role !== 'developer' ? '<button class="btn sm blue" data-a="backfill" data-id="' + e.id + '" title="إدخال حضور سابق"><i class="fa-solid fa-calendar-plus"></i></button>' : '') +
               (isDev() && e.role !== 'developer' ? '<button class="btn sm danger" data-a="del" data-id="' + e.id + '" title="حذف"><i class="fa-solid fa-trash"></i></button>' : '') + '</div>';
           } else if (isDev() && e.archived) acts = '<button class="btn sm green" data-a="restore" data-id="' + e.id + '">استرجاع</button>';
-          return '<tr><td><b>' + esc(e.name) + '</b>' + (e.hasCustomZones ? ' <i class="fa-solid fa-map-pin" style="color:var(--pink)" title="نطاقات مخصصة"></i>' : '') + '</td><td><span class="role-chip ' + esc(e.role) + '">' + esc(e.roleAr) + (e.role === 'developer' ? ' 🔒' : '') + '</span></td><td>' + esc(e.branch || '—') + '</td><td>' + esc(e.title || '—') + '</td><td class="ltr">' + esc(e.phone || '') + '</td><td>' + e.devices + (e.pending ? ' <span class="pill wait">+' + e.pending + '</span>' : '') + '</td><td>' + st + '</td>' + (empActsCol() ? '<td>' + acts + '</td>' : '') + '</tr>';
+          return '<tr><td><b>' + esc(e.name) + '</b>' + (e.hasCustomZones ? ' <i class="fa-solid fa-map-pin" style="color:var(--pink)" title="نطاقات مخصصة"></i>' : '') + (e.ownSched ? '<br><span class="pill info" title="دوام خاص"><i class="fa-solid fa-clock"></i> <span class="ltr">' + esc(e.ownSched.start) + '–' + esc(e.ownSched.end) + '</span></span>' : '') + '</td><td><span class="role-chip ' + esc(e.role) + '">' + esc(e.roleAr) + (e.role === 'developer' ? ' 🔒' : '') + '</span></td><td>' + esc(e.branch || '—') + '</td><td>' + esc(e.title || '—') + '</td><td class="ltr">' + esc(e.phone || '') + '</td><td>' + e.devices + (e.pending ? ' <span class="pill wait">+' + e.pending + '</span>' : '') + '</td><td>' + st + '</td>' + (empActsCol() ? '<td>' + acts + '</td>' : '') + '</tr>';
         }).join('') + '</tbody></table></div><div class="tiny" style="margin-top:8px">' + l.length + ' حساب</div></div>';
       $('e-list').querySelectorAll('[data-a]').forEach(function (b) {
         var e = l.filter(function (x) { return x.id === b.dataset.id; })[0];
@@ -750,6 +751,7 @@ function tabEmployees(el) {
           else if (a === 'pin') pinForm(e);
           else if (a === 'zones') employeeZonesForm(e, load);
           else if (a === 'backfill') backfillForm(e);
+          else if (a === 'sched') empSchedForm(e, load);
           else if (a === 'act') confirmBox((e.active ? 'إيقاف حساب ' : 'تفعيل حساب ') + e.name + '؟', { danger: e.active }).then(function (ok) { if (ok) api('setEmployeeActive', { id: e.id, active: !e.active }).then(function () { toast('تم', 'ok'); load(); }).catch(function (x) { toast(x.message, 'err'); }); });
           else if (a === 'del') confirmBox('حذف حساب ' + e.name + '؟ الحساب ينقفل ويختفي من القوائم، وبصماته وسجله تبقى محفوظة.', { danger: true, yes: 'حذف' }).then(function (ok) { if (ok) api('archiveEmployee', { id: e.id }).then(function () { toast('تم الحذف', 'ok'); load(); }).catch(function (x) { toast(x.message, 'err'); }); });
           else if (a === 'restore') api('archiveEmployee', { id: e.id, restore: true }).then(function () { toast('تم الاسترجاع', 'ok'); load(); }).catch(function (x) { toast(x.message, 'err'); });
@@ -759,7 +761,7 @@ function tabEmployees(el) {
   }
   load();
 }
-function empActsCol() { return isDev() || cap('edit_employees') || cap('reset_pins') || cap('toggle_employees'); }
+function empActsCol() { return isDev() || cap('edit_schedule') || cap('edit_employees') || cap('reset_pins') || cap('toggle_employees'); }
 function employeeForm(e, done) {
   var isNew = !e; e = e || { name: '', phone: '', title_id: '', branch_id: S.branch || (S.admin.branches[0] ? S.admin.branches[0].id : ''), role: 'employee' };
   var roles = S.admin.assignable.slice();
@@ -811,7 +813,7 @@ function backfillForm(e) {
   var yest = y.toISOString().slice(0, 10);
   var names = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
   openModal('إدخال حضور سابق — ' + e.name,
-    '<div class="info-box" style="margin-bottom:10px">النظام يضيف لكل يوم دوام دخول وانصراف بأوقات طبيعية متفاوتة داخل وقت السماح (بدون تأخير ولا انصراف مبكر) حسب دوام فرعها. الأيام اللي فيها بصمات ما يلمسها. وكل هالبصمات تنعلّم «إدخال يدوي» في السجل والتصدير.</div>' +
+    '<div class="info-box" style="margin-bottom:10px">النظام يضيف لكل يوم دوام دخول وانصراف بأوقات طبيعية متفاوتة داخل وقت السماح (بدون تأخير ولا انصراف مبكر) حسب دوامها — دوامها الخاص إذا محدد لها، وإلا دوام فرعها. الأيام اللي فيها بصمات ما يلمسها. وكل هالبصمات تنعلّم «إدخال يدوي» في السجل والتصدير.</div>' +
     '<div class="grid2"><div><label>من</label><input type="date" id="bf-from" value="' + monthStart() + '" max="' + yest + '"></div><div><label>إلى</label><input type="date" id="bf-to" value="' + yest + '" max="' + yest + '"></div></div>' +
     '<label>أيام الدوام</label><div class="chip-list">' + names.map(function (n, i) { return '<label class="chip" style="display:inline-flex;gap:6px;align-items:center;margin:0;font-weight:500"><input type="checkbox" class="bf-day" value="' + i + '"' + (i <= 4 ? ' checked' : '') + '> ' + n + '</label>'; }).join('') + '</div>' +
     '<div id="bf-prev" style="margin-top:12px"></div>' +
@@ -825,7 +827,7 @@ function backfillForm(e) {
     var b = this; busy(b, true);
     api('backfillPreview', args()).then(function (r) {
       busy(b, false);
-      $('bf-prev').innerHTML = r.days ? '<div class="ok-box">بيضاف <b>' + r.days + '</b> يوم (من ' + fmtDate(r.first) + ' إلى ' + fmtDate(r.last) + ')، دخول حول ' + esc(r.start) + ' وانصراف بعد ' + esc(r.end) + '.' + (r.skipped ? '<br>بيتخطّى ' + r.skipped + ' يوم فيه بصمات من قبل.' : '') + '</div>' : '<div class="hint-box">ما في أيام تنضاف' + (r.skipped ? ' (كل الأيام فيها بصمات)' : '') + '.</div>';
+      $('bf-prev').innerHTML = r.days ? '<div class="ok-box">بيضاف <b>' + r.days + '</b> يوم (من ' + fmtDate(r.first) + ' إلى ' + fmtDate(r.last) + ')، دخول حول ' + esc(r.start) + ' وانصراف بعد ' + esc(r.end) + (r.own ? ' (دوامها الخاص)' : ' (دوام الفرع)') + '.' + (r.skipped ? '<br>بيتخطّى ' + r.skipped + ' يوم فيه بصمات من قبل.' : '') + '</div>' : '<div class="hint-box">ما في أيام تنضاف' + (r.skipped ? ' (كل الأيام فيها بصمات)' : '') + '.</div>';
       $('bf-go').disabled = !r.days;
     }).catch(function (x) { busy(b, false); $('bf-prev').innerHTML = '<div class="err-box">' + esc(x.message) + '</div>'; });
   };
@@ -838,6 +840,20 @@ function backfillForm(e) {
       if (ok) api('deleteAttendance', { mode: 'emp_manual', employee_id: e.id }).then(function (r) { toast('تم حذف ' + r.deleted + ' بصمة يدوية', 'ok'); }).catch(function (x) { toast(x.message, 'err'); });
     });
   };
+}
+/** دوام خاص لموظفة — فاضي يرجعها لدوام فرعها. */
+function empSchedForm(e, done) {
+  var o = e.ownSched || e.own || null;
+  openModal('دوام خاص — ' + e.name,
+    '<div class="info-box" style="margin-bottom:10px">إذا حددت دوام خاص، التأخير والانصراف المبكر والإدخال الآلي ينحسبون على دوامها هي بدل دوام الفرع (دقائق السماح تبقى نفس الفرع).' + (e.base ? '<br>دوام فرعها: <b dir="ltr">' + esc(e.base.start) + ' – ' + esc(e.base.end) + '</b>' : '') + '</div>' +
+    '<div class="grid2"><div><label>بداية دوامها</label><input type="time" id="es-ws" value="' + esc(o ? o.start : '') + '"></div><div><label>نهاية دوامها</label><input type="time" id="es-we" value="' + esc(o ? o.end : '') + '"></div></div>' +
+    '<div class="btn-row" style="margin-top:14px"><button class="btn" id="es-save" style="width:auto"><i class="fa-solid fa-floppy-disk"></i> حفظ</button>' + (o ? '<button class="btn ghost" id="es-clear" style="width:auto"><i class="fa-solid fa-rotate-left"></i> رجوع لدوام الفرع</button>' : '') + '</div>');
+  function send(ws, we, b) {
+    busy(b, true);
+    api('setEmployeeSchedule', { id: e.id, work_start: ws, work_end: we }).then(function () { closeModal(); toast(ws ? 'تم حفظ الدوام الخاص' : 'رجعت لدوام الفرع', 'ok'); if (done) done(); }).catch(function (x) { busy(b, false); toast(x.message, 'err'); });
+  }
+  $('es-save').onclick = function () { var ws = $('es-ws').value, we = $('es-we').value; if (!ws || !we) return toast('حدد البداية والنهاية', 'err'); if (we <= ws) return toast('النهاية لازم بعد البداية', 'err'); send(ws, we, this); };
+  if ($('es-clear')) $('es-clear').onclick = function () { send('', '', this); };
 }
 /* ----- الأجهزة ----- */
 function tabDevices(el) {
@@ -1021,7 +1037,17 @@ function tabSchedule(el) {
         '<div class="tiny" style="margin-top:6px">الخانة الفاضية تاخذ قيمة الدوام العام.</div>' +
         (b.canEdit ? '<button class="btn sm" data-save="' + b.id + '" style="margin-top:10px">حفظ دوام الفرع</button>' : '') + '</div>';
     }).join('');
-    el.innerHTML = '<div class="info-box" style="margin-bottom:14px">أي تعديل على الدوام ينعكس فورًا على كل السجلات والتقارير والتأخيرات.</div>' + gHtml + bHtml;
+    var own = (s.employees || []).filter(function (x) { return x.own; });
+    var others = (s.employees || []).filter(function (x) { return !x.own && x.canEdit; });
+    var eHtml = '<div class="card"><h3><i class="fa-solid fa-clock" style="color:var(--pink)"></i> دوام خاص لموظفات <span class="tiny">(يغلب على دوام الفرع)</span></h3>' +
+      (own.length ? '<div class="table-wrap"><table><thead><tr><th>الموظفة</th><th>الفرع</th><th>دوامها</th><th>دوام الفرع</th>' + (s.canEditEmp ? '<th></th>' : '') + '</tr></thead><tbody>' + own.map(function (x) {
+        return '<tr><td><b>' + esc(x.name) + '</b></td><td>' + esc(x.branch || '—') + '</td><td><b dir="ltr">' + esc(x.own.start) + ' – ' + esc(x.own.end) + '</b></td><td class="tiny"><span dir="ltr">' + esc(x.base.start) + ' – ' + esc(x.base.end) + '</span></td>' + (s.canEditEmp ? '<td>' + (x.canEdit ? '<button class="btn sm ghost" data-es="' + x.id + '"><i class="fa-solid fa-pen"></i></button>' : '') + '</td>' : '') + '</tr>';
+      }).join('') + '</tbody></table></div>' : '<div class="tiny">ما في موظفة لها دوام خاص. كلهم على دوام فروعهم.</div>') +
+      (s.canEditEmp && others.length ? '<div class="filters" style="margin-top:12px"><div><label>إضافة دوام خاص لموظفة</label><select id="es-pick"><option value="">— اختر —</option>' + others.map(function (x) { return '<option value="' + esc(x.id) + '">' + esc(x.name) + (x.branch ? ' (' + esc(x.branch) + ')' : '') + '</option>'; }).join('') + '</select></div></div>' : '') + '</div>';
+    el.innerHTML = '<div class="info-box" style="margin-bottom:14px">أي تعديل على الدوام ينعكس فورًا على كل السجلات والتقارير والتأخيرات.</div>' + gHtml + bHtml + eHtml;
+    var refresh = function () { tabSchedule(el); };
+    el.querySelectorAll('[data-es]').forEach(function (b) { b.onclick = function () { empSchedForm(s.employees.filter(function (x) { return x.id === b.dataset.es; })[0], refresh); }; });
+    if ($('es-pick')) $('es-pick').onchange = function () { var id = this.value; if (id) empSchedForm(s.employees.filter(function (x) { return x.id === id; })[0], refresh); };
     if ($('g-save')) $('g-save').onclick = function () { var b = this; busy(b, true); api('saveSettings', { work_start: $('g-ws').value, work_end: $('g-we').value, grace_minutes: $('g-g').value, early_grace_minutes: $('g-eg').value }).then(function () { toast('تم الحفظ', 'ok'); tabSchedule(el); }).catch(function (e) { busy(b, false); toast(e.message, 'err'); }); };
     el.querySelectorAll('[data-save]').forEach(function (btn) {
       btn.onclick = function () {
