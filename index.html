@@ -229,13 +229,27 @@ function busy(btn, on, label) {
   if (on) { btn.dataset.html = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="spin"></span> ' + (label || 'لحظة…'); }
   else { btn.disabled = false; if (btn.dataset.html) btn.innerHTML = btn.dataset.html; }
 }
+/** تحديد الموقع (17 نوفمبر 2026): بلاغ «الموقع معلق» بآيفون — نطلب الموقع بطريقتين مع بعض (دقيق + سريع/مخزّن)،
+ *  وناخذ أفضل قراءة خلال ثواني، ومهلة قصوى 25 ثانية مهما صار حتى ما تعلق الصفحة أبدًا، مع شرح الإعدادات. */
+var LOC_HELP = 'تأكدي من الإعدادات بالآيفون: الإعدادات ← الخصوصية والأمان ← خدمات الموقع (تشغيل) ← مواقع Safari ← «أثناء استخدام التطبيق» وفعّلي «الموقع الدقيق». وبعدها اضغطي «حاولي مرة ثانية».';
 function getPosition() {
   return new Promise(function (resolve, reject) {
     if (!navigator.geolocation) return reject(new Error('المتصفح لا يدعم تحديد الموقع'));
-    navigator.geolocation.getCurrentPosition(function (p) { resolve(p.coords); }, function (err) {
-      var m = { 1: 'لازم تسمحين للصفحة باستخدام الموقع (من إعدادات المتصفح ← الموقع ← سماح)', 2: 'تعذّر تحديد موقعك. تأكدي إن خدمة الموقع (GPS) شغالة', 3: 'تأخر تحديد الموقع، حاولي مرة ثانية' };
-      reject(new Error(m[err.code] || 'تعذّر تحديد الموقع'));
-    }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 });
+    var done = false, best = null, wid = null, t1 = null, t2 = null;
+    function finish(ok, v) {
+      if (done) return; done = true;
+      if (wid !== null) { try { navigator.geolocation.clearWatch(wid); } catch (e) {} }
+      clearTimeout(t1); clearTimeout(t2);
+      if (ok) resolve(v); else reject(v);
+    }
+    function onPos(p) { var c = p && p.coords; if (!c) return; if (!best || c.accuracy < best.accuracy) best = c; if (best.accuracy <= 60) finish(true, best); }
+    function onErr(err) {
+      if (err && err.code === 1) finish(false, new Error('لازم تسمحين للصفحة باستخدام الموقع. ' + LOC_HELP));
+    }
+    try { wid = navigator.geolocation.watchPosition(onPos, onErr, { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }); } catch (e) {}
+    try { navigator.geolocation.getCurrentPosition(onPos, onErr, { enableHighAccuracy: false, timeout: 12000, maximumAge: 120000 }); } catch (e) {}
+    t1 = setTimeout(function () { if (best) finish(true, best); }, 9000);
+    t2 = setTimeout(function () { if (best) finish(true, best); else finish(false, new Error('ما قدرنا نحدد موقعك. ' + LOC_HELP)); }, 25000);
   });
 }
 function logoHtml(cls, size) { return '<img class="logo ' + (cls || '') + '" src="' + esc(S.logo || '') + '" alt="الشعار" width="' + size + '" height="' + size + '">'; }
